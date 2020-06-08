@@ -1,4 +1,4 @@
-# OBS Studio Python Scripting Cheetsheet
+# OBS Studio Python Scripting Cheatsheet
 Python3.6 , OBS Studio 25.0.8 
 # Table of content 
 - [Using classes](#using-classes)
