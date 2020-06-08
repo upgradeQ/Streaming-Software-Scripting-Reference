@@ -7,7 +7,7 @@ Python3.6 , OBS Studio 25.0.8
 - [UI](#ui)
 - [Additional input](#additional-input)
 - [obs_data](#obs_data)
-- [Timing (sequential primitives) ](#timing-(sequential-primitives))
+- [Timing (sequential primitives) ](#timing-sequential-primitives)
 - [Hotkey](#hotkey)
 - [Contribute](#contribute)
 
