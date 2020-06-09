@@ -1,5 +1,5 @@
 # OBS Studio Python Scripting Cheatsheet
-Python3.6 , OBS Studio 25.0.8 
+`obspython` OBS Studio API.
 # Table of content 
 - [Using classes](#using-classes)
 - [with statement](#with-statement)
@@ -9,6 +9,7 @@ Python3.6 , OBS Studio 25.0.8
 - [obs_data](#obs_data)
 - [Timing (sequential primitives) ](#timing-sequential-primitives)
 - [Hotkey](#hotkey)
+- [Links](#links)
 - [Contribute](#contribute)
 
 ## Using classes 
@@ -27,7 +28,7 @@ class Example:
             obs.obs_data_release(settings)
             obs.obs_source_release(source)
 ```
-[Full example](example_class.py)
+[Full example](src/example_class.py)
 
 ## with statement 
 Automatically release .
@@ -49,7 +50,7 @@ with source_auto_release(self.source_name) as source:
             obs.obs_data_set_string(settings, "text", data)
             obs.obs_source_update(source, settings)
 ```
-[Full example](with_stmt.py)  
+[Full example](src/with_stmt.py)  
 See also :   
 https://docs.python.org/3/library/contextlib.html#contextlib.contextmanager
 ## Passing arguments to callbacks
@@ -60,7 +61,7 @@ flag = obs.obs_data_get_bool(settings,"_obs_bool")
 eg.update_text = partial(eg.update_text,flag_func=flag)
 ...
 ```
-[Full example](callback_partial.py)
+[Full example](src/callback_partial.py)
 ## UI
 |code   | result  |
 | ---   | ---     |
@@ -102,7 +103,7 @@ def script_properties():  # ui
     obs.obs_property_set_modified_callback(number, callback)
     ...
 ```
-[Full example](modification_prop.py)  
+[Full example](src/modification_prop.py)  
 See also :  
 https://obsproject.com/docs/reference-properties.html#property-modification-functions
 
@@ -115,7 +116,7 @@ https://obsproject.com/docs/reference-properties.html#property-modification-func
     ...
 
 ```
-[Full example](export_vars.py)  
+[Full example](src/export_vars.py)  
 [Generated export1.txt](export1.txt) contains all variables available in `obspython`  
 
 Overall , properties share similar structure , in Python, Lua, C.
@@ -131,7 +132,7 @@ def script_update(settings):
     if eg.source_name != "":
         obs.timer_add(eg.update_text, 1 * 1000)
 ```
-[Full example](example_class.py)  
+[Full example](src/example_class.py)  
 Note: each time script updated it's removed first  
 See also :   
 https://obsproject.com/docs/scripting.html#script-timers  
@@ -161,6 +162,12 @@ def script_load(settings):
     obs.obs_data_array_release(hotkey_save_array_htk)
     ...
 ```
-[Full example](hotkey_exmpl.py)
+[Full example](src/hotkey_exmpl.py)
+# Links
+- [Scripts](https://obsproject.com/forum/resources/categories/scripts.5/)
+- [Repo](https://github.com/obsproject/obs-studio)
+- [Docs](https://obsproject.com/docs/)
+- [Docs/scripting](https://obsproject.com/docs/scripting.html)
 # Contribute
-Missing something ? Fork & PR , contributions are welcome!
+[Forks](https://help.github.com/articles/fork-a-repo) are a great way to contribute to a repository.
+After forking a repository, you can send the original author a [pull request](https://help.github.com/articles/using-pull-requests)
