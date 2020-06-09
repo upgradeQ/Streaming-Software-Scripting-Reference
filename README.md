@@ -65,13 +65,13 @@ eg.update_text = partial(eg.update_text,flag_func=flag)
 ## UI
 |code   | result  |
 | ---   | ---     |
-|`obs.obs_properties_add_button(props, "button1", "Refresh1:",callback)` | ![img](button.png) |
-|`obs.obs_properties_add_bool(props,"_bool","_bool:")` | ![img](bool.png) |
-|`obs.obs_properties_add_int(props,"_int","_int:",1,100,1)` | ![img](int.png) |
-|`obs.obs_properties_add_int_slider(props,"_slider","_slider:",1,100,1) ` | ![img](slider.png) |
-|`obs.obs_properties_add_text(props, "_text", "_text:", obs.OBS_TEXT_DEFAULT) ` | ![img](text.png) |
-|`obs.obs_properties_add_color(props,"_color","_color:") ` | ![img](color.png) |
-|`obs.obs_properties_add_font(props,"_font","_font:")  `|  ![img](font.png) |
+|`obs.obs_properties_add_button(props, "button1", "Refresh1:",callback)` | ![img](src/button.png) |
+|`obs.obs_properties_add_bool(props,"_bool","_bool:")` | ![img](src/bool.png) |
+|`obs.obs_properties_add_int(props,"_int","_int:",1,100,1)` | ![img](src/int.png) |
+|`obs.obs_properties_add_int_slider(props,"_slider","_slider:",1,100,1) ` | ![img](src/slider.png) |
+|`obs.obs_properties_add_text(props, "_text", "_text:", obs.OBS_TEXT_DEFAULT) ` | ![img](src/text.png) |
+|`obs.obs_properties_add_color(props,"_color","_color:") ` | ![img](src/color.png) |
+|`obs.obs_properties_add_font(props,"_font","_font:")  `|  ![img](src/font.png) |
 
 See also :   
 https://obsproject.com/docs/reference-properties.html#property-object-functions
