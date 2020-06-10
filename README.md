@@ -1,5 +1,5 @@
 # OBS Studio Python Scripting Cheatsheet
-`obspython` OBS Studio API.
+`obspython` OBS Studio API.Obs scripts examples in /src. Each obs script example mostly will operate on *existsing* `TEXT SOURCE`
 # Table of content 
 - [Using classes](#using-classes)
 - [with statement](#with-statement)
@@ -117,7 +117,7 @@ https://obsproject.com/docs/reference-properties.html#property-modification-func
 
 ```
 [Full example](src/export_vars.py)  
-[Generated export1.txt](export1.txt) contains all variables available in `obspython`  
+[Generated export1.txt](src/export1.txt) contains all variables available in `obspython`  
 
 Overall , properties share similar structure , in Python, Lua, C.
 [Example C](https://github.com/obsproject/obs-studio/blob/05c9ddd2293a17717a1bb4189406dfdad79a93e1/plugins/oss-audio/oss-input.c#L626)

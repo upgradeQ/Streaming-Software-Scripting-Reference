@@ -2,12 +2,12 @@ import obspython as obs
 from itertools import cycle
 
 datacycle = cycle([1, 2, 3, 4, 5])
+HOTKEY_ID = obs.OBS_INVALID_HOTKEY_ID
 
 
 class Example:
     def __init__(self, source_name=None):
         self.source_name = source_name
-        self.hotkey_id_htk = obs.OBS_INVALID_HOTKEY_ID
 
     def update_text(self):
         source = obs.obs_get_source_by_name(self.source_name)
@@ -28,8 +28,23 @@ def script_description():
 
 
 def script_save(settings):
-    hotkey_save_array_htk = obs.obs_hotkey_save(eg.hotkey_id_htk)
+    global HOTKEY_ID
+    hotkey_save_array_htk = obs.obs_hotkey_save(HOTKEY_ID)
     obs.obs_data_set_array(settings, "htk_hotkey", hotkey_save_array_htk)
+    obs.obs_data_array_release(hotkey_save_array_htk)
+
+
+def script_load(settings):
+    global HOTKEY_ID
+    def callback(pressed):
+        if pressed:
+            return eg.update_text()
+
+    HOTKEY_ID = obs.obs_hotkey_register_frontend(
+        "htk_id", "Example hotkey", callback
+    )
+    hotkey_save_array_htk = obs.obs_data_get_array(settings, "htk_hotkey")
+    obs.obs_hotkey_load(HOTKEY_ID, hotkey_save_array_htk)
     obs.obs_data_array_release(hotkey_save_array_htk)
 
 
@@ -56,16 +71,3 @@ def script_properties():  # ui
 
         obs.source_list_release(sources)
     return props
-
-
-def script_load(settings):
-    def callback(pressed):
-        if pressed:
-            return eg.update_text()
-
-    hotkey_id_htk = obs.obs_hotkey_register_frontend(
-        "htk_id", "Example hotkey", callback
-    )
-    hotkey_save_array_htk = obs.obs_data_get_array(settings, "htk_hotkey")
-    obs.obs_hotkey_load(hotkey_id_htk, hotkey_save_array_htk)
-    obs.obs_data_array_release(hotkey_save_array_htk)
