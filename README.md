@@ -5,6 +5,7 @@
 - [with statement](#with-statement)
 - [Passing arguments to callbacks](#passing-arguments-to-callbacks)
 - [UI](#ui)
+- [Property modification](#property-modification)
 - [Additional input](#additional-input)
 - [obs_data](#obs_data)
 - [Timing (sequential primitives) ](#timing-sequential-primitives)
@@ -75,6 +76,26 @@ eg.update_text = partial(eg.update_text,flag_func=flag)
 
 See also :   
 https://obsproject.com/docs/reference-properties.html#property-object-functions
+
+## Property modification
+```python
+def callback(props, prop, *args, **kwargs):  # pass settings implicitly
+    p = obs.obs_properties_get(props, "button")
+    n = next(counter)
+    obs.obs_property_set_description(p, f"refresh pressed {n} times")
+    return True
+...
+def script_properties():
+    props = obs.obs_properties_create()
+    b = obs.obs_properties_add_button(
+        props, "button", "refresh pressed 0 times", refresh_pressed
+    )
+    obs.obs_property_set_modified_callback(b, callback)
+    return props
+```
+[Full example](src/property_modification.py)  
+See also :  
+https://obsproject.com/docs/reference-properties.html#property-modification-functions
 
 ## Additional input 
 ```python
