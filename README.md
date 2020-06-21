@@ -8,6 +8,7 @@
 - [Property modification](#property-modification)
 - [Additional input](#additional-input)
 - [obs_data](#obs_data)
+- [Add source](#add-source)
 - [Timing (sequential primitives) ](#timing-sequential-primitives)
 - [Hotkey](#hotkey)
 - [Links](#links)
@@ -143,6 +144,16 @@ https://obsproject.com/docs/reference-properties.html#property-modification-func
 Overall , properties share similar structure , in Python, Lua, C.
 [Example C](https://github.com/obsproject/obs-studio/blob/05c9ddd2293a17717a1bb4189406dfdad79a93e1/plugins/oss-audio/oss-input.c#L626)
 
+# Add source
+Create source and add it to current scene 
+```python
+obs.obs_data_set_string(settings, "text", "The quick brown fox jumps over the lazy dog")
+source = obs.obs_source_create_private("text_gdiplus", "test_py", settings)
+obs.obs_scene_add(scene, source)
+```
+[Full example](src/source_add.py)  
+See also :  
+https://obsproject.com/docs/reference-scenes.html
 
 # Timing (sequential primitives)
 
