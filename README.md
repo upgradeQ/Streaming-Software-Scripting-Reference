@@ -9,6 +9,7 @@
 - [Additional input](#additional-input)
 - [obs_data](#obs_data)
 - [Add source](#add-source)
+- [Move source](#move-source)
 - [Timing (sequential primitives) ](#timing-sequential-primitives)
 - [Hotkey](#hotkey)
 - [Links](#links)
@@ -155,6 +156,31 @@ obs.obs_scene_add(scene, source)
 See also :  
 https://obsproject.com/docs/reference-scenes.html
 
+# Move source
+Get current scene , get source name, move source to location 
+```python
+def __init__(self):
+    pos = obs.vec2()
+    self.location = pos
+...
+def move_text_source(self):
+    current_scene = obs.obs_frontend_get_current_scene()
+    source = obs.obs_get_source_by_name("test_py")
+    scene = obs.obs_scene_from_source(current_scene)
+    scene_item = obs.obs_scene_find_source(scene, "test_py")
+    if scene_item:
+        dx, dy = 10, 10
+        print("old values", self.location.x)
+        obs.obs_sceneitem_get_pos(
+            scene_item, self.location
+        )  # update to last position if its changed from OBS
+        self.location.x += dx
+        self.location.y += dy
+        print("new values", self.location.x)
+        obs.obs_sceneitem_set_pos(scene_item, self.location)
+```
+[Full example](src/move_source_.py)
+
 # Timing (sequential primitives)
 
 ```python
@@ -200,6 +226,7 @@ def script_load(settings):
 - [Repo](https://github.com/obsproject/obs-studio)
 - [Docs](https://obsproject.com/docs/)
 - [Docs/scripting](https://obsproject.com/docs/scripting.html)
+- [Docs index](https://obsproject.com/docs/genindex.html)
 # Contribute
 [Forks](https://help.github.com/articles/fork-a-repo) are a great way to contribute to a repository.
 After forking a repository, you can send the original author a [pull request](https://help.github.com/articles/using-pull-requests)

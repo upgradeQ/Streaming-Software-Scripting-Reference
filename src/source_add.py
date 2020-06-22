@@ -7,7 +7,9 @@ class Example:
         scene = obs.obs_scene_from_source(current_scene)
         settings = obs.obs_data_create()
 
-        obs.obs_data_set_string(settings, "text", "The quick brown fox jumps over the lazy dog")
+        obs.obs_data_set_string(
+            settings, "text", "The quick brown fox jumps over the lazy dog"
+        )
         source = obs.obs_source_create_private("text_gdiplus", "test_py", settings)
         obs.obs_scene_add(scene, source)
 
@@ -20,7 +22,6 @@ eg = Example()  # class created ,obs part starts
 
 
 def add_pressed(props, prop):
-    print("refresh pressed")
     eg.crete_text_source()
 
 
