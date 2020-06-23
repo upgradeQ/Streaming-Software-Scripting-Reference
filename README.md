@@ -10,6 +10,7 @@
 - [obs_data](#obs_data)
 - [Add source](#add-source)
 - [Move source](#move-source)
+- [Add filter to source](#add-filter-to-source)
 - [Timing (sequential primitives) ](#timing-sequential-primitives)
 - [Hotkey](#hotkey)
 - [Links](#links)
@@ -180,7 +181,19 @@ def move_text_source(self):
         obs.obs_sceneitem_set_pos(scene_item, self.location)
 ```
 [Full example](src/move_source_.py)
-
+# Add filter to source
+Filters are sources,they are not listed in obspython module, you need to know its id from `obs_source_info`
+```python
+obs.obs_data_set_int(settings, "opacity", 50)
+source_color = obs.obs_source_create_private(
+    "color_filter", "opacity to 50", settings
+)
+obs.obs_source_filter_add(source, source_color)
+```
+[Full example](src/source_filter.py)  
+See also :  
+[Color correction source](https://github.com/obsproject/obs-studio/blob/c938ea712bce0e9d8e0cf348fd8f77725122b9a5/plugins/obs-filters/color-correction-filter.c#L408)  
+https://obsproject.com/docs/reference-sources.html
 # Timing (sequential primitives)
 
 ```python
