@@ -8,6 +8,7 @@
 - [Property modification](#property-modification)
 - [Additional input](#additional-input)
 - [obs_data](#obs_data)
+- [Source's and filters with identifier string](#source's-and-filters-with-identifier-string)
 - [Add source](#add-source)
 - [Move source](#move-source)
 - [Add filter to source](#add-filter-to-source)
@@ -145,6 +146,42 @@ https://obsproject.com/docs/reference-properties.html#property-modification-func
 
 Overall , properties share similar structure , in Python, Lua, C.
 [Example C](https://github.com/obsproject/obs-studio/blob/05c9ddd2293a17717a1bb4189406dfdad79a93e1/plugins/oss-audio/oss-input.c#L626)
+# Source's and filters with identifier string
+## Source's
+| Name | Source type identifier string |
+| --- | --- | 
+| Browser | browser_source | 
+| Color Source | color_source |
+| Display Capture | monitor_capture |
+| Game Capture | game_capture |
+| Image | image_source | 
+| Image Slide Show | slideshow |
+| Media Source | ffmpeg_source |
+| Text (GDI+) | text_gdiplus |
+| Window Capture | window_capture |
+## Filters
+| Name | Source type identifier string |
+| --- | --- | 
+| Compressor | compressor_filter | 
+| Expander | expander_filter | 
+| Gain | gain_filter | 
+| Invert Polarity | invert_polarity_filter |
+| Limiter | limiter_filter | 
+| Noise Gate | noise_gate_filter |
+| Noise Suppression | noise_suppress_filter |
+| VST 2.x Plug-in | vst_filter |
+| Video Delay (Async) | async_delay_filter |
+| Chroma Key | chroma_key_filter |
+| Color Correction | color_filter |
+| Color Key | color_key_filter |
+| Crop/Pad | crop_filter | 
+| Image Mask/Blend | mask_filter |
+| Luma Key | luma_key_filter |
+| Render Delay | gpu_delay |
+| Scaling/Aspect Ratio | scale_filter |
+| Scroll | scroll_filter | 
+| Sharpen | sharpness_filter | 
+
 
 # Add source
 Create source and add it to current scene 
