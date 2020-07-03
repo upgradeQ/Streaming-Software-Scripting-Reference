@@ -8,10 +8,12 @@
 - [Property modification](#property-modification)
 - [Additional input](#additional-input)
 - [obs_data](#obs_data)
-- [Source's and filters with identifier string](#source's-and-filters-with-identifier-string)
+- [Source's and filters with identifier string](#sources-and-filters-with-identifier-string)
 - [Add source](#add-source)
 - [Move source](#move-source)
 - [Add filter to source](#add-filter-to-source)
+- [Toggle source visibility](#toggle-source-visibility)
+- [Set current scene](#set-current-scene)
 - [Timing (sequential primitives) ](#timing-sequential-primitives)
 - [Hotkey](#hotkey)
 - [Links](#links)
@@ -231,6 +233,32 @@ obs.obs_source_filter_add(source, source_color)
 See also :  
 [Color correction source](https://github.com/obsproject/obs-studio/blob/c938ea712bce0e9d8e0cf348fd8f77725122b9a5/plugins/obs-filters/color-correction-filter.c#L408)  
 https://obsproject.com/docs/reference-sources.html
+# Toggle source visibility
+```python
+def toggle(self):
+    current_scene = obs.obs_scene_from_source(obs.obs_frontend_get_current_scene())
+    scene_item = obs.obs_scene_find_source(current_scene, self.source_name)
+    boolean = not obs.obs_sceneitem_visible(scene_item)
+    obs.obs_sceneitem_set_visible(scene_item, boolean)
+```
+[Full example](src/toggle_source_vis.py)
+
+# Set current scene
+```python
+def set_current_scene(self):
+    scenes = obs.obs_frontend_get_scenes()
+    for scene in scenes:
+        name = obs.obs_source_get_name(scene)
+        if name == self.scene_name:
+            obs.obs_frontend_set_current_scene(scene)
+...
+scenes = obs.obs_frontend_get_scenes() # Dropdown menu UI
+for scene in scenes:
+    name = obs.obs_source_get_name(scene)
+    obs.obs_property_list_add_string(p, name, name) 
+```
+[Full example](src/get_scene_by_name.py)
+
 # Timing (sequential primitives)
 
 ```python
@@ -274,9 +302,7 @@ def script_load(settings):
 # Links
 - [Scripts](https://obsproject.com/forum/resources/categories/scripts.5/)
 - [Repo](https://github.com/obsproject/obs-studio)
-- [Docs](https://obsproject.com/docs/)
-- [Docs/scripting](https://obsproject.com/docs/scripting.html)
-- [Docs index](https://obsproject.com/docs/genindex.html)
+- [Docs](https://obsproject.com/docs/) , [Docs/scripting](https://obsproject.com/docs/scripting.html) , [Docs index](https://obsproject.com/docs/genindex.html)
 # Contribute
 [Forks](https://help.github.com/articles/fork-a-repo) are a great way to contribute to a repository.
 After forking a repository, you can send the original author a [pull request](https://help.github.com/articles/using-pull-requests)
