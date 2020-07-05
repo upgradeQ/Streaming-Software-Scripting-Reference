@@ -14,6 +14,7 @@
 - [Add filter to source](#add-filter-to-source)
 - [Toggle source visibility](#toggle-source-visibility)
 - [Set current scene](#set-current-scene)
+- [Events](#events)
 - [Timing (sequential primitives) ](#timing-sequential-primitives)
 - [Hotkey](#hotkey)
 - [Links](#links)
@@ -149,6 +150,7 @@ https://obsproject.com/docs/reference-properties.html#property-modification-func
 Overall , properties share similar structure , in Python, Lua, C.
 [Example C](https://github.com/obsproject/obs-studio/blob/05c9ddd2293a17717a1bb4189406dfdad79a93e1/plugins/oss-audio/oss-input.c#L626)
 # Source's and filters with identifier string
+To identify with `obs_source_get_unversioned_id` , or creating source/filter.
 ## Source's
 | Name | Source type identifier string |
 | --- | --- | 
@@ -259,6 +261,19 @@ for scene in scenes:
 ```
 [Full example](src/get_scene_by_name.py)
 
+# Events
+```python
+def on_event(event):
+    if event == obs.OBS_FRONTEND_EVENT_SCENE_CHANGED:
+        raise Exception("Triggered when the current scene has changed.")
+
+
+def script_load(settings):
+    obs.obs_frontend_add_event_callback(on_event)
+```
+[Full example](src/obs_event_exmpl.py)  
+See also:  
+https://obsproject.com/docs/reference-frontend-api.html#structures-enumerations  
 # Timing (sequential primitives)
 
 ```python
@@ -271,6 +286,7 @@ def script_update(settings):
 [Full example](src/example_class.py)  
 Note: each time script updated it's removed first  
 See also :   
+[Version](src/start_stop_timer.py) with globals and only one timer allowed.  
 https://obsproject.com/docs/scripting.html#script-timers  
 
 # Hotkey
