@@ -290,31 +290,39 @@ See also :
 https://obsproject.com/docs/scripting.html#script-timers  
 
 # Hotkey
-```python
-class Example:
-    def __init__(self, source_name=None):
-        self.source_name = source_name
-        self.hotkey_id_htk = obs.OBS_INVALID_HOTKEY_ID
-    ...
-def script_save(settings):
-    hotkey_save_array_htk = obs.obs_hotkey_save(eg.hotkey_id_htk)
-    obs.obs_data_set_array(settings, "htk_hotkey", hotkey_save_array_htk)
-    obs.obs_data_array_release(hotkey_save_array_htk)
-    ...
-def script_load(settings):
-    def callback(pressed):
-        if pressed:
-            return eg.update_text()
 
-    hotkey_id_htk = obs.obs_hotkey_register_frontend(
-        "htk_id", "Example hotkey", callback
-    )
-    hotkey_save_array_htk = obs.obs_data_get_array(settings, "htk_hotkey")
-    obs.obs_hotkey_load(hotkey_id_htk, hotkey_save_array_htk)
-    obs.obs_data_array_release(hotkey_save_array_htk)
-    ...
+```python
+class Hotkey:
+    htk_copy = None  # this attribute will hold instance of itself
+
+    def __init__(self, callback, obs_settings, _id):
+        self.obs_data = obs_settings
+        self.hotkey_id = obs.OBS_INVALID_HOTKEY_ID
+        self.hotkey_saved_key = None
+        self.callback = callback
+        self._id = _id
+
+        self.load_hotkey()
+        self.register_hotkey()
+        self.save_hotkey()
+...
+class h:
+    pass
+h1 = h()
+h2 = h()
+...
+def script_load(settings):
+    _h1 = Hotkey(cb1, settings, "h1_id")
+    h1.htk_copy = _h1
+    _h2 = Hotkey(cb2, settings, "h2_id")
+    h2.htk_copy = _h2
+
+def script_save(settings):
+    h1.htk_copy.save_hotkey()
+    h2.htk_copy.save_hotkey()
 ```
-[Full example](src/hotkey_exmpl.py)
+- [Full example](src/obs_httkeys.py) 
+- [Example with global ](src/hotkey_exmpl.py)
 # Links
 - [Scripts](https://obsproject.com/forum/resources/categories/scripts.5/)
 - [Repo](https://github.com/obsproject/obs-studio)
