@@ -2,8 +2,6 @@ import obspython as obs
 
 
 class Hotkey:
-    htk_copy = None  # this attribute will hold instance of itself
-
     def __init__(self, callback, obs_settings, _id):
         self.obs_data = obs_settings
         self.hotkey_id = obs.OBS_INVALID_HOTKEY_ID
@@ -36,14 +34,18 @@ class Hotkey:
         obs.obs_data_array_release(self.hotkey_saved_key)
 
 
+class h:
+    htk_copy = None  # this attribute will hold instance of Hotkey
+
+
 def cb1(pressed):
     if pressed:
-        print("cb1: " + e1.txt)
+        print("callback1: " + e1.txt)
 
 
 def cb2(pressed):
     if pressed:
-        print("cb2: " + e2.txt)
+        print("callback2: " + e2.txt)
 
 
 class e:
@@ -52,11 +54,6 @@ class e:
 
 e1 = e()
 e2 = e()
-
-
-class h:
-    pass
-
 
 h1 = h()
 h2 = h()
@@ -77,10 +74,8 @@ def script_update(settings):
 
 
 def script_load(settings):
-    _h1 = Hotkey(cb1, settings, "h1_id")
-    h1.htk_copy = _h1
-    _h2 = Hotkey(cb2, settings, "h2_id")
-    h2.htk_copy = _h2
+    h1.htk_copy = Hotkey(cb1, settings, "h1_id")
+    h2.htk_copy = Hotkey(cb2, settings, "h2_id")
 
 
 def script_save(settings):

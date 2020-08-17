@@ -293,8 +293,6 @@ https://obsproject.com/docs/scripting.html#script-timers
 
 ```python
 class Hotkey:
-    htk_copy = None  # this attribute will hold instance of itself
-
     def __init__(self, callback, obs_settings, _id):
         self.obs_data = obs_settings
         self.hotkey_id = obs.OBS_INVALID_HOTKEY_ID
@@ -305,17 +303,20 @@ class Hotkey:
         self.load_hotkey()
         self.register_hotkey()
         self.save_hotkey()
+
 ...
+
 class h:
-    pass
+    htk_copy = None  # this attribute will hold instance of Hotkey
+
+...
 h1 = h()
 h2 = h()
 ...
 def script_load(settings):
-    _h1 = Hotkey(cb1, settings, "h1_id")
-    h1.htk_copy = _h1
-    _h2 = Hotkey(cb2, settings, "h2_id")
-    h2.htk_copy = _h2
+    h1.htk_copy = Hotkey(cb1, settings, "h1_id")
+    h2.htk_copy = Hotkey(cb2, settings, "h2_id")
+
 
 def script_save(settings):
     h1.htk_copy.save_hotkey()
