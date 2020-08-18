@@ -1,5 +1,7 @@
 # OBS Studio Python Scripting Cheatsheet
-`obspython` OBS Studio API.Obs scripts examples in /src. Each obs script example mostly will operate on *existsing* `TEXT SOURCE`
+- `obspython` OBS Studio API.Obs scripts examples in `/src` 
+- Each obs script example mostly will operate on *existsing* text source
+- It is possible to duplicate scripts and re-add them to OBS ( names must be different) 
 # Table of content 
 - [Using classes](#using-classes)
 - [with statement](#with-statement)
@@ -18,6 +20,7 @@
 - [Timing (sequential primitives) ](#timing-sequential-primitives)
 - [Hotkey](#hotkey)
 - [Links](#links)
+- [Debug](#debug)
 - [Contribute](#contribute)
 
 ## Using classes 
@@ -324,10 +327,24 @@ def script_save(settings):
 ```
 - [Full example](src/obs_httkeys.py) 
 - [Example with global ](src/hotkey_exmpl.py)
+
+# Debug
+There is no stdin therefore you can't use pdb , options are:
+- using `print`
+- using pycharm remote debugging (localhost)
+- using [vscode](https://code.visualstudio.com/docs/python/debugging) attach to the process:
+    - Load python extension
+    - open script file , `pip install debugpy` , place  `debugpy.breakpoint()` somewhere
+        - Run (F5) select configuration ( Attach using Process ID)
+        - select obs (on windows `obs64.exe`)
+        - View  select Debug Console (ctrl+shift+y) 
+- [Example debugpy obs ](src/debug_exmpl.py)
+
+![screenshot](src/debug.png)  
+
 # Links
 - [Scripts](https://obsproject.com/forum/resources/categories/scripts.5/)
 - [Repo](https://github.com/obsproject/obs-studio)
 - [Docs](https://obsproject.com/docs/) , [Docs/scripting](https://obsproject.com/docs/scripting.html) , [Docs index](https://obsproject.com/docs/genindex.html)
 # Contribute
-[Forks](https://help.github.com/articles/fork-a-repo) are a great way to contribute to a repository.
-After forking a repository, you can send the original author a [pull request](https://help.github.com/articles/using-pull-requests)
+Contributions are welcome!
