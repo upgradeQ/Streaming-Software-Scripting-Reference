@@ -10,6 +10,7 @@
 - [Property modification](#property-modification)
 - [Additional input](#additional-input)
 - [obs_data](#obs_data)
+- [save settings as json](#save-settings-as-json)
 - [Source's and filters with identifier string](#sources-and-filters-with-identifier-string)
 - [Add source](#add-source)
 - [Move source](#move-source)
@@ -19,8 +20,8 @@
 - [Events](#events)
 - [Timing (sequential primitives) ](#timing-sequential-primitives)
 - [Hotkey](#hotkey)
-- [Links](#links)
 - [Debug](#debug)
+- [Links](#links)
 - [Contribute](#contribute)
 
 ## Using classes 
@@ -152,6 +153,24 @@ https://obsproject.com/docs/reference-properties.html#property-modification-func
 
 Overall , properties share similar structure , in Python, Lua, C.
 [Example C](https://github.com/obsproject/obs-studio/blob/05c9ddd2293a17717a1bb4189406dfdad79a93e1/plugins/oss-audio/oss-input.c#L626)
+
+## Save settings as json
+
+```python
+p = Path(__file__).absolute()  # current script path
+file = p.parent / "saved_settings.json"
+try:
+    content = obs.obs_data_get_json(Data._settings_)
+    with open(file, "w") as f:
+        f.write(content)
+except Exception as e:
+    print(e, "cannot write to file")
+```
+[Full example](src/save_json_data.py)  
+See also :  
+https://obsproject.com/docs/reference-settings.html  
+https://obsproject.com/docs/scripting.html#getting-the-current-script-s-path  
+
 # Source's and filters with identifier string
 To identify with `obs_source_get_unversioned_id` , or creating source/filter.
 ## Source's
