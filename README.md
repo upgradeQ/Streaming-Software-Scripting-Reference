@@ -17,6 +17,7 @@
 - [Add filter to source](#add-filter-to-source)
 - [Toggle source visibility](#toggle-source-visibility)
 - [Set current scene](#set-current-scene)
+- [Get set order in scene](#get-set-order-in-scene)
 - [Events](#events)
 - [Timing (sequential primitives) ](#timing-sequential-primitives)
 - [Hotkey](#hotkey)
@@ -282,6 +283,32 @@ for scene in scenes:
     obs.obs_property_list_add_string(p, name, name) 
 ```
 [Full example](src/get_scene_by_name.py)
+# Get set order in scene
+```python
+def get_order(scene_items=None):
+    order = list()
+    for i, s in enumerate(scene_items):
+        source = obs.obs_sceneitem_get_source(s)
+        name = obs.obs_source_get_name(source)
+        order.append({"index": i, "name": name, "scene_item": s})
+    return order
+
+
+def reorder():
+    current_scene = obs.obs_frontend_get_current_scene()
+    with scene_ar(current_scene) as scene:
+        with scene_enum(scene) as scene_items:
+            order = get_order(scene_items)
+            # change second index with pre last
+            order[1]["index"], order[-2]["index"] = (
+                order[-2]["index"],
+                order[1]["index"],
+            )
+            for s in sorted(order, key=lambda i: i["index"]):
+                obs.obs_sceneitem_set_order_position(s["scene_item"], s["index"])
+
+```
+[Full example](src/change_order.py)
 
 # Events
 ```python
