@@ -19,8 +19,9 @@
 - [Set current scene](#set-current-scene)
 - [Get set order in scene](#get-set-order-in-scene)
 - [Events](#events)
+- [Program state](#program-state)
 - [Timing (sequential primitives) ](#timing-sequential-primitives)
-- [Hotkey](#hotkey)
+- [Hotkeys](#hotkeys)
 - [Debug](#debug)
 - [Links](#links)
 - [Contribute](#contribute)
@@ -41,7 +42,22 @@ class Example:
             obs.obs_data_release(settings)
             obs.obs_source_release(source)
 ```
-[Full example](src/example_class.py)
+[Full example](src/example_class.py)  
+
+Or more compact:  
+```python
+class _G:
+    source_name = ''
+    data = None
+    flag = False
+
+G = _G()
+
+def script_update(settings):
+    G.source_name = ...
+    if G.flag:
+        pass
+```
 
 ## with statement 
 Automatically release .
@@ -323,6 +339,14 @@ def script_load(settings):
 [Full example](src/obs_event_exmpl.py)  
 See also:  
 https://obsproject.com/docs/reference-frontend-api.html#structures-enumerations  
+# Program state
+Those functions return true or false :
+- `obs.obs_frontend_preview_program_mode_active()`
+- `obs.obs_frontend_replay_buffer_active()`
+- `obs.obs_frontend_recording_active()`
+- `obs.obs_frontend_recording_paused()`
+- `obs.obs_frontend_streaming_active()`
+
 # Timing (sequential primitives)
 
 ```python
@@ -338,8 +362,8 @@ See also :
 [Version](src/start_stop_timer.py) with globals and only one timer allowed.  
 https://obsproject.com/docs/scripting.html#script-timers  
 
-# Hotkey
-
+# Hotkeys
+This hotkey example will create hotkeys in settings , but you need to bind it manually.
 ```python
 class Hotkey:
     def __init__(self, callback, obs_settings, _id):
@@ -371,8 +395,27 @@ def script_save(settings):
     h1.htk_copy.save_hotkey()
     h2.htk_copy.save_hotkey()
 ```
+This hotkey example will create hotkeys on fly from json settings , but you need to know internal id.
+```python
+ID = "htk_id"
+JSON_DATA = '{"%s":[{"key":"OBS_KEY_1"}]}' % ID
+
+def on_obs_key_1(pressed):
+    if pressed:
+        raise Exception("hotkey 1 pressed")
+
+def script_load(settings):
+    s = obs.obs_data_create_from_json(JSON_DATA)
+    a = obs.obs_data_get_array(s, ID)
+    h = obs.obs_hotkey_register_frontend(ID, ID, on_obs_key_1)
+    obs.obs_hotkey_load(h, a)
+```
 - [Full example](src/obs_httkeys.py) 
 - [Example with global ](src/hotkey_exmpl.py)
+- [Full example with json](src/hotkey_json.py)  
+
+See also:  
+https://github.com/obsproject/obs-studio/blob/master/libobs/obs-hotkeys.h
 
 # Debug
 There is no stdin therefore you can't use pdb , options are:
@@ -392,5 +435,7 @@ There is no stdin therefore you can't use pdb , options are:
 - [Scripts](https://obsproject.com/forum/resources/categories/scripts.5/)
 - [Repo](https://github.com/obsproject/obs-studio)
 - [Docs](https://obsproject.com/docs/) , [Docs/scripting](https://obsproject.com/docs/scripting.html) , [Docs index](https://obsproject.com/docs/genindex.html)
+- [Gist](https://gist.github.com/search?l=Python&q=obspython)
+- [Github](https://github.com/search?l=Python&o=desc&q=obspython&s=indexed&type=Code)
 # Contribute
 Contributions are welcome!
