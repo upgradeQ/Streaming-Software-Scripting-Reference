@@ -157,6 +157,15 @@ See also :
 https://obsproject.com/docs/reference-properties.html#property-modification-functions
 
 ## obs_data
+
+- `obs_data_get_string`
+- `obs_data_get_int`
+- `obs_data_get_double`
+- `obs_data_get_bool`
+- `obs_data_get_obj`
+- `obs_data_get_array`
+
+ Introspection of `obspython`: 
 ```python
     ...
     data = vars(obs)
@@ -168,7 +177,7 @@ https://obsproject.com/docs/reference-properties.html#property-modification-func
 [Full example](src/export_vars.py)  
 [Generated export1.txt](src/export1.txt) contains all variables available in `obspython`  
 
-Overall , properties share similar structure , in Python, Lua, C.
+Note: properties share similar structure , in Python, Lua, C.
 [Example C](https://github.com/obsproject/obs-studio/blob/05c9ddd2293a17717a1bb4189406dfdad79a93e1/plugins/oss-audio/oss-input.c#L626)
 
 ## Save settings as json
