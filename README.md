@@ -442,9 +442,10 @@ There is no stdin therefore you can't use pdb , options are:
 
 # Links
 - [Scripts](https://obsproject.com/forum/resources/categories/scripts.5/)
-- [Repo](https://github.com/obsproject/obs-studio)
+- [OBS Studio Repo](https://github.com/obsproject/obs-studio)
 - [Docs](https://obsproject.com/docs/) , [Docs/scripting](https://obsproject.com/docs/scripting.html) , [Docs index](https://obsproject.com/docs/genindex.html)
 - [Gist](https://gist.github.com/search?l=Python&q=obspython)
 - [Github](https://github.com/search?l=Python&o=desc&q=obspython&s=indexed&type=Code)
+- [Python 3.6.8 , 64 bit installer](https://www.python.org/downloads/release/python-368/)
 # Contribute
 Contributions are welcome!
