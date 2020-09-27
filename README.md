@@ -166,16 +166,8 @@ https://obsproject.com/docs/reference-properties.html#property-modification-func
 - `obs_data_get_array`
 
  Introspection of `obspython`: 
-```python
-    ...
-    data = vars(obs)
-    with open('export1.txt','w') as f:
-        pprint(data,stream=f,width=100)
-    ...
-
-```
-[Full example](src/export_vars.py)  
-[Generated export1.txt](src/export1.txt) contains all variables available in `obspython`  
+[Full example](src/export_md.py)  
+[Generated export1.txt](src/export.md) contains all variables and functions available in `obspython` formatted with markdown and linked to appropriate search terms in OBS Studio github repository.   
 
 Note: properties share similar structure , in Python, Lua, C.
 [Example C](https://github.com/obsproject/obs-studio/blob/05c9ddd2293a17717a1bb4189406dfdad79a93e1/plugins/oss-audio/oss-input.c#L626)
