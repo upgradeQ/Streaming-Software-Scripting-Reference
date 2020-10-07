@@ -22,7 +22,9 @@
 - [Program state](#program-state)
 - [Timing (sequential primitives) ](#timing-sequential-primitives)
 - [Hotkeys](#hotkeys)
+- [Play sound](#play-sound)
 - [Debug](#debug)
+- [Docs and code examples](docs-and-code-examples)
 - [Links](#links)
 - [Contribute](#contribute)
 
@@ -92,15 +94,15 @@ eg.update_text = partial(eg.update_text,flag_func=flag)
 ```
 [Full example](src/callback_partial.py)
 ## UI
-|code   | result  |
-| ---   | ---     |
-|`obs.obs_properties_add_button(props, "button1", "Refresh1:",callback)` | ![img](src/button.png) |
-|`obs.obs_properties_add_bool(props,"_bool","_bool:")` | ![img](src/bool.png) |
-|`obs.obs_properties_add_int(props,"_int","_int:",1,100,1)` | ![img](src/int.png) |
-|`obs.obs_properties_add_int_slider(props,"_slider","_slider:",1,100,1) ` | ![img](src/slider.png) |
-|`obs.obs_properties_add_text(props, "_text", "_text:", obs.OBS_TEXT_DEFAULT) ` | ![img](src/text.png) |
-|`obs.obs_properties_add_color(props,"_color","_color:") ` | ![img](src/color.png) |
-|`obs.obs_properties_add_font(props,"_font","_font:")  `|  ![img](src/font.png) |
+|Preview| 
+| --- | 
+| `obs.obs_properties_add_button(props, "button1", "Refresh1:",callback)` ![img](src/button.png) |
+|`obs.obs_properties_add_bool(props,"_bool","_bool:")` ![img](src/bool.png) |
+|`obs.obs_properties_add_int(props,"_int","_int:",1,100,1)` ![img](src/int.png) |
+|`obs.obs_properties_add_int_slider(props,"_slider","_slider:",1,100,1) ` ![img](src/slider.png) |
+|`obs.obs_properties_add_text(props, "_text", "_text:", obs.OBS_TEXT_DEFAULT) ` ![img](src/text.png) |
+|`obs.obs_properties_add_color(props,"_color","_color:") ` ![img](src/color.png) |
+|`obs.obs_properties_add_font(props,"_font","_font:")  ` ![img](src/font.png) |
 
 See also :   
 https://obsproject.com/docs/reference-properties.html#property-object-functions
@@ -153,6 +155,9 @@ def script_properties():  # ui
     ...
 ```
 [Full example](src/modification_prop.py)  
+
+Note: properties share similar structure , in Python, Lua, C.
+[Example C](https://github.com/obsproject/obs-studio/blob/05c9ddd2293a17717a1bb4189406dfdad79a93e1/plugins/oss-audio/oss-input.c#L626)
 See also :  
 https://obsproject.com/docs/reference-properties.html#property-modification-functions
 
@@ -164,13 +169,6 @@ https://obsproject.com/docs/reference-properties.html#property-modification-func
 - `obs_data_get_bool`
 - `obs_data_get_obj`
 - `obs_data_get_array`
-
- Introspection of `obspython`: 
-[Full example](src/export_md.py)  
-[Generated export1.txt](src/export.md) contains all variables and functions available in `obspython` formatted with markdown and linked to appropriate search terms in OBS Studio github repository.   
-
-Note: properties share similar structure , in Python, Lua, C.
-[Example C](https://github.com/obsproject/obs-studio/blob/05c9ddd2293a17717a1bb4189406dfdad79a93e1/plugins/oss-audio/oss-input.c#L626)
 
 ## Save settings as json
 
@@ -418,6 +416,23 @@ def script_load(settings):
 See also:  
 https://github.com/obsproject/obs-studio/blob/master/libobs/obs-hotkeys.h
 
+# Play sound
+```python
+def play_sound():
+    ...
+    mediaSource = obs.obs_source_create_private(
+        "ffmpeg_source", "Global Media Source", None
+    )
+    s = obs.obs_data_create()
+    obs.obs_data_set_string(s, "local_file", script_path() + "alert.mp3")
+    obs.obs_source_update(mediaSource, s)
+    obs.obs_source_set_monitoring_type(
+        mediaSource, obs.OBS_MONITORING_TYPE_MONITOR_AND_OUTPUT
+    )
+    ...
+```
+- [Full example](src/play_sound_globally.py)
+
 # Debug
 There is no stdin therefore you can't use pdb , options are:
 - using `print`
@@ -431,6 +446,13 @@ There is no stdin therefore you can't use pdb , options are:
 - [Example debugpy obs ](src/debug_exmpl.py)
 
 ![screenshot](src/debug.png)  
+
+# Docs and code examples
+
+[Generated export.md](src/export.md) contains all variables and functions available in `obspython` formatted with markdown. Table consist of links to appropriate search terms in OBS Studio repository, and obswebsocket,links to scripts in `obspython` and `obslua` with each script within github code search.`gs_*` and `matrix_*` functions exluded from that table.   
+[Full example](src/export_md.py)  
+
+
 
 # Links
 - [Scripts](https://obsproject.com/forum/resources/categories/scripts.5/)
