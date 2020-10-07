@@ -24,7 +24,7 @@
 - [Hotkeys](#hotkeys)
 - [Play sound](#play-sound)
 - [Debug](#debug)
-- [Docs and code examples](docs-and-code-examples)
+- [Docs and code examples](#docs-and-code-examples)
 - [Links](#links)
 - [Contribute](#contribute)
 
