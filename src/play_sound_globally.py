@@ -36,4 +36,4 @@ def script_load(settings):
 
 
 def script_unload():
-    obs.obs_set_output_source(outputIndex, nil)
+    obs.obs_set_output_source(outputIndex, None)
