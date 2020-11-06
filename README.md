@@ -18,11 +18,13 @@
 - [Toggle source visibility](#toggle-source-visibility)
 - [Set current scene](#set-current-scene)
 - [Get set order in scene](#get-set-order-in-scene)
+- [Add scene with sources to current scene](#add-scene-with-sources-to-current-scene)
 - [Events](#events)
 - [Program state](#program-state)
 - [Timing (sequential primitives) ](#timing-sequential-primitives)
 - [Hotkeys](#hotkeys)
 - [Play sound](#play-sound)
+- [Read and write private data from scripts or plugins](#read-and-write-private-data-from-scripts-or-plugins)
 - [Debug](#debug)
 - [Docs and code examples](#docs-and-code-examples)
 - [Links](#links)
@@ -96,13 +98,16 @@ eg.update_text = partial(eg.update_text,flag_func=flag)
 ## UI
 |Preview| 
 | --- | 
-| `obs.obs_properties_add_button(props, "button1", "Refresh1:",callback)` ![img](src/button.png) |
-|`obs.obs_properties_add_bool(props,"_bool","_bool:")` ![img](src/bool.png) |
-|`obs.obs_properties_add_int(props,"_int","_int:",1,100,1)` ![img](src/int.png) |
-|`obs.obs_properties_add_int_slider(props,"_slider","_slider:",1,100,1) ` ![img](src/slider.png) |
-|`obs.obs_properties_add_text(props, "_text", "_text:", obs.OBS_TEXT_DEFAULT) ` ![img](src/text.png) |
-|`obs.obs_properties_add_color(props,"_color","_color:") ` ![img](src/color.png) |
-|`obs.obs_properties_add_font(props,"_font","_font:")  ` ![img](src/font.png) |
+| `obs.obs_properties_add_button(props, "button1", "Refresh1:",callback)` ![img](src/assets/button.png) |
+|`obs.obs_properties_add_bool(props,"_bool","_bool:")` ![img](src/assets/bool.png) |
+|`obs.obs_properties_add_int(props,"_int","_int:",1,100,1)` ![img](src/assets/int.png) |
+|`obs.obs_properties_add_int_slider(props,"_slider","_slider:",1,100,1) ` ![img](src/assets/slider.png) |
+|`obs.obs_properties_add_text(props, "_text", "_text:", obs.OBS_TEXT_DEFAULT) ` ![img](src/assets/text.png) |
+|`obs.obs_properties_add_color(props,"_color","_color:") ` ![img](src/assets/color.png) |
+|`obs.obs_properties_add_font(props,"_font","_font:")  ` ![img](src/assets/font.png) |
+|`obs.obs_properties_add_font(props,"_font","_font:")  ` ![img](src/assets/font.png) |
+|`bool_p = obs.obs_properties_add_bool(props, "_obs_bool", "Yes/No"); obs.obs_property_set_long_description(bool_p, "Check if yes,else uncheck")` ![img](src/assets/description.gif) |
+
 
 See also :   
 https://obsproject.com/docs/reference-properties.html#property-object-functions
@@ -325,6 +330,37 @@ def reorder():
 ```
 [Full example](src/change_order.py)
 
+# Add scene with sources to current scene
+```python
+def add_random_text_source(scene):
+    r = " random text # " + str(randint(0, 10))
+    with data_ar() as settings:
+        obs.obs_data_set_string(settings, "text", f"random text value {r}")
+        with source_create_ar("text_ft2_source", f"random text{r}", settings) as source:
+            pos = obs.vec2()
+            pos.x = randint(0, 1920)
+            pos.y = randint(0, 1080)
+            scene_item = obs.obs_scene_add(scene, source)
+            obs.obs_sceneitem_set_pos(scene_item, pos)
+
+def add_scene_with_sources():
+    current_scene_source = obs.obs_frontend_get_current_scene()
+    with scene_from_source_ar(current_scene_source) as scene_source:
+        with scene_create_ar("_nested_scene") as _scene:
+            py_scene_source = obs.obs_scene_get_source(_scene)
+
+            with scene_from_source_ar(py_scene_source) as scene:
+                add_random_text_source(scene)
+                add_random_text_source(scene)
+                add_random_text_source(scene)
+
+            # add created scene to current scene ( nested scene)
+            _scene_source = obs.obs_scene_get_source(scene)
+            obs.obs_scene_add(scene_source, _scene_source)
+```
+Note: sometimes OBS crashes if one of such scenes has been deleted.  
+- [Full example](src/add_nested.py)
+
 # Events
 ```python
 def on_event(event):
@@ -409,12 +445,33 @@ def script_load(settings):
     h = obs.obs_hotkey_register_frontend(ID, ID, on_obs_key_1)
     obs.obs_hotkey_load(h, a)
 ```
+Here is how send hotkey to OBS
+
+```python
+def send_hotkey(obs_htk_id, key_modifiers=None):
+    if key_modifiers:
+        shift = key_modifiers.get("shift")
+        control = key_modifiers.get("control")
+        alt = key_modifiers.get("alt")
+        command = key_modifiers.get("command")
+    ...
+    combo = obs.obs_key_combination()
+    combo.modifiers = modifiers
+    combo.key = obs.obs_key_from_name(obs_htk_id)
+    ...
+    obs.obs_hotkey_inject_event(combo, False)
+    obs.obs_hotkey_inject_event(combo, True)
+    obs.obs_hotkey_inject_event(combo, False)
+```
+
 - [Full example](src/obs_httkeys.py) 
 - [Example with global ](src/hotkey_exmpl.py)
 - [Full example with json](src/hotkey_json.py)  
+- [Full example with send hotkey](src/send_hotkey.py)
 
 See also:  
 https://github.com/obsproject/obs-studio/blob/master/libobs/obs-hotkeys.h
+https://github.com/Palakis/obs-websocket/pull/595
 
 # Play sound
 ```python
@@ -433,6 +490,48 @@ def play_sound():
 ```
 - [Full example](src/play_sound_globally.py)
 
+# Read and write private data from scripts or plugins
+Write in one script
+```python 
+def send_to_private_data(data_type, field, result):
+    settings = obs.obs_data_create()
+    set = getattr(obs, f"obs_data_set_{data_type}")
+    set(settings, field, result)
+    obs.obs_apply_private_data(settings)
+    obs.obs_data_release(settings)
+
+def write_private_data():
+    result = "private value from " + str(__file__) + " " + str(randint(1, 10))
+    send_to_private_data("string", "__private__", result)
+```
+Read from another 
+```python
+@contextmanager
+def p_data_ar(data_type, field):
+    settings = obs.obs_get_private_data()
+    get = getattr(obs, f"obs_data_get_{data_type}")
+    try:
+        yield get(settings, field)
+    finally:
+        obs.obs_data_release(settings)
+
+def print_private_data():
+    with p_data_ar("string", "__private__") as value:
+        print(value)
+```
+Lua is also supported
+```lua
+local obs = obslua
+local settings = obs.obs_data_create()
+obs.obs_data_set_int(settings,"__private__", 7)
+obs.obs_apply_private_data(settings)
+obs.obs_data_release(settings)
+```
+
+- [Full example read](src/read_private_data.py)
+- [Full example write](src/write_private_data.py) 
+
+
 # Debug
 There is no stdin therefore you can't use pdb , options are:
 - using `print`
@@ -445,7 +544,7 @@ There is no stdin therefore you can't use pdb , options are:
         - View  select Debug Console (ctrl+shift+y) 
 - [Example debugpy obs ](src/debug_exmpl.py)
 
-![screenshot](src/debug.png)  
+![screenshot](src/assets/debug.png)  
 
 # Docs and code examples
 
