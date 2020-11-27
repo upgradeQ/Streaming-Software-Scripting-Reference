@@ -21,6 +21,7 @@
 - [Add scene with sources to current scene](#add-scene-with-sources-to-current-scene)
 - [Events](#events)
 - [Program state](#program-state)
+- [Signals](#signals)
 - [Timing (sequential primitives) ](#timing-sequential-primitives)
 - [Hotkeys](#hotkeys)
 - [Play sound](#play-sound)
@@ -381,6 +382,73 @@ Those functions return true or false :
 - `obs.obs_frontend_recording_active()`
 - `obs.obs_frontend_recording_paused()`
 - `obs.obs_frontend_streaming_active()`
+# Signals
+[Signals](https://obsproject.com/docs/frontends.html#signals) , [callbacks](https://obsproject.com/docs/reference-libobs-callback.html) , [differences from C](https://obsproject.com/docs/scripting.html#other-differences-from-the-c-api)
+## Core signals
+```python
+sh = obs.obs_get_signal_handler()
+obs.signal_handler_connect(sh,"source_create",callback)
+def callback(calldata):
+    source = obs.calldata_source(cd,"source")
+    print(obs.obs_source_get_name(source))
+```
+**source_create**, **source_destroy**, **source_remove**, **source_save**, **source_load**, **source_activate**, **source_deactivate**, **source_show**, **source_hide**, **source_rename**, **source_volume**, **source_transition_start**, **source_transition_video_stop**, **source_transition_stop**, **channel_change**, **master_volume**, **hotkey_layout_change**, **hotkey_register**, **hotkey_unregister**, **hotkey_bindings_changed** 
+
+https://obsproject.com/docs/reference-core.html#core-obs-signals
+
+## Scene signals
+```python
+def connect_cur_scene():
+    source = obs.obs_frontend_get_current_scene()
+    sh = obs.obs_source_get_signal_handler(source)
+    obs.signal_handler_connect(sh, "item_add", callback)
+    obs.obs_source_release(source)
+
+
+def callback(calldata):
+    scene_item = obs.calldata_sceneitem(calldata, "item")
+    #scene = obs.calldata_source(cd,"scene") # bad utf symbols 
+    scene =  obs.obs_sceneitem_get_scene(scene_item)
+    name = obs.obs_source_get_name
+    source = obs.obs_sceneitem_get_source
+    scene_source = obs.obs_scene_get_source
+    scene_name = name(scene_source(scene))
+    scene_item_name = name(source(scene_item))
+    print(f"item {scene_item_name} has been added to scene {scene_name}")
+```
+- [Full example](src/scene_sig_con.py)
+
+**item_add**, **item_remove**, **reorder**, **refresh**, **item_visible**, **item_locked**, **item_select**, **item_deselect**, **item_transform**
+
+https://obsproject.com/docs/reference-scenes.html#scene-signals
+## Source signals 
+
+```python
+sh = obs.obs_source_get_signal_handler(some_source)
+obs.signal_handler_connect(sh,"show",callback)
+def callback(calldata):
+    source = obs.calldata_source(cd,"source")
+    print("on source show",obs.obs_source_get_name(source))
+```
+
+**destroy**, **remove**, **save**, **load**, **activate**, **deactivate**, **show**, **hide**, **mute**, **push_to_mute_changed**, **push_to_mute_delay**, **push_to_talk_changed**, **push_to_talk_delay**, **enable**, **rename**, **volume**, **update_properties**, **update_flags**, **audio_sync**, **audio_mixers**, **filter_add**, **filter_remove**, **reorder_filters**, **transition_start**, **transition_video_stop**, **transition_stop**, **media_started**, **media_ended**, **media_pause**, **media_play**, **media_restart**, **media_stopped**, **media_next**, **media_previous** 
+
+https://obsproject.com/docs/reference-sources.html#source-signals
+
+## Output signals 
+```python
+def connect_to_rec():
+    sh = obs.obs_output_get_signal_handler(obs.obs_frontend_get_recording_output())
+    obs.signal_handler_connect(sh, "pause", callback)
+
+def callback(calldata):
+    #out = obs.calldata_ptr(calldata, "output") # bad type
+    print('output paused')
+```
+
+**start**, **stop**, **pause**, **unpause**, **starting**, **stopping**, **activate**, **deactivate**, **reconnect**, **reconnect_success**
+
+https://obsproject.com/docs/reference-outputs.html#output-signals
 
 # Timing (sequential primitives)
 
@@ -396,6 +464,31 @@ Note: each time script updated it's removed first
 See also :   
 [Version](src/start_stop_timer.py) with globals and only one timer allowed.  
 https://obsproject.com/docs/scripting.html#script-timers  
+## Thread
+```python
+def callback(pressed):
+    if pressed:
+        toggle_thread()
+
+
+def busy_thread():
+    while True:
+        if not data.thread_paused:
+            sleep(0.02)
+            data.status = "active"
+            # print to stdoud crashes OBS on exit
+        else:
+            sleep(0.5)
+            data.status = "inactive"
+
+
+print('Press the "~" to toggle on/off')
+hook("OBS_KEY_ASCIITILDE", "id_", callback)
+obs.timer_add(lambda: print(data.status), 500)
+t = threading.Thread(target=busy_thread)
+t.start()
+```
+- [Full example](src/busy_thread.py)
 
 # Hotkeys
 This hotkey example will create hotkeys in settings , but you need to bind it manually.
@@ -555,8 +648,8 @@ There is no stdin therefore you can't use pdb , options are:
 
 # Links
 - [Scripts](https://obsproject.com/forum/resources/categories/scripts.5/)
-- [OBS Studio Repo](https://github.com/obsproject/obs-studio)
-- [Docs](https://obsproject.com/docs/) , [Docs/scripting](https://obsproject.com/docs/scripting.html) , [Docs index](https://obsproject.com/docs/genindex.html)
+- [OBS Studio Repo](https://github.com/obsproject/obs-studio) , [obs-scripting-python.c](https://github.com/obsproject/obs-studio/blob/master/deps/obs-scripting/obs-scripting-python.c)
+- [Docs](https://obsproject.com/docs/) , [Docs/scripting](https://obsproject.com/docs/scripting.html) , [Docs/plugins](https://obsproject.com/docs/plugins.html) , [Docs index](https://obsproject.com/docs/genindex.html)
 - obspython [Gist](https://gist.github.com/search?l=Python&q=obspython) , [Github](https://github.com/search?l=Python&o=desc&q=obspython&s=indexed&type=Code)
 - obslua [Gist](https://gist.github.com/search?l=Lua&o=desc&q=obslua&s=updated) , [Github](https://github.com/search?l=Lua&o=desc&q=obslua&s=indexed&type=Code)
 - [Lua tips and tricks](https://obsproject.com/forum/threads/tips-and-tricks-for-lua-scripts.132256/)
