@@ -643,15 +643,15 @@ There is no stdin therefore you can't use pdb , options are:
 
 [Generated export.md](src/export.md) contains all variables and functions available in `obspython` formatted with markdown. Table consist of links to appropriate search terms in OBS Studio repository, and obswebsocket,links to scripts in `obspython` and `obslua` with each script within github code search.`gs_*` and `matrix_*` functions exluded from that table.   
 [Full example](src/export_md.py)  
-
+`Note` : starting from 2020.12.17 Github Code Search no longer works as it was, see also this [thread](https://github.community/t/feedback-on-changes-to-code-search-indexing/150660)  
 
 
 # Links
-- [Scripts](https://obsproject.com/forum/resources/categories/scripts.5/)
+- [Scripts forum](https://obsproject.com/forum/resources/categories/scripts.5/) , [Github topic `obs-scripts`](https://github.com/topics/obs-scripts) , [Github topic `obs-script`](https://github.com/topics/obs-script)
 - [OBS Studio Repo](https://github.com/obsproject/obs-studio) , [obs-scripting-python.c](https://github.com/obsproject/obs-studio/blob/master/deps/obs-scripting/obs-scripting-python.c)
 - [Docs](https://obsproject.com/docs/) , [Docs/scripting](https://obsproject.com/docs/scripting.html) , [Docs/plugins](https://obsproject.com/docs/plugins.html) , [Docs index](https://obsproject.com/docs/genindex.html)
-- obspython [Gist](https://gist.github.com/search?l=Python&q=obspython) , [Github](https://github.com/search?l=Python&o=desc&q=obspython&s=indexed&type=Code)
-- obslua [Gist](https://gist.github.com/search?l=Lua&o=desc&q=obslua&s=updated) , [Github](https://github.com/search?l=Lua&o=desc&q=obslua&s=indexed&type=Code)
+- obspython [Gist](https://gist.github.com/search?l=Python&q=obspython) , [Github](https://github.com/search?l=Python&o=desc&q=obspython&s=indexed&type=Code) , [grep.app](https://grep.app/search?q=obspython&filter[lang][0]=Python)
+- obslua [Gist](https://gist.github.com/search?l=Lua&o=desc&q=obslua&s=updated) , [Github](https://github.com/search?l=Lua&o=desc&q=obslua&s=indexed&type=Code) , [grep.app](https://grep.app/search?q=obslua&filter[lang][0]=Lua)
 - [Lua tips and tricks](https://obsproject.com/forum/threads/tips-and-tricks-for-lua-scripts.132256/)
 - [Python 3.6.8 , 64 bit installer](https://www.python.org/downloads/release/python-368/)
 # Contribute
