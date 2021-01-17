@@ -15,7 +15,7 @@
 - [Add source](#add-source)
 - [Move source](#move-source)
 - [Add filter to source](#add-filter-to-source)
-- [Toggle source visibility](#toggle-source-visibility)
+- [Toggle sceneitem visibility](#toggle-sceneitem-visibility)
 - [Set current scene](#set-current-scene)
 - [Get set order in scene](#get-set-order-in-scene)
 - [Add scene with sources to current scene](#add-scene-with-sources-to-current-scene)
@@ -279,7 +279,7 @@ obs.obs_source_filter_add(source, source_color)
 See also :  
 [Color correction source](https://github.com/obsproject/obs-studio/blob/c938ea712bce0e9d8e0cf348fd8f77725122b9a5/plugins/obs-filters/color-correction-filter.c#L408)  
 https://obsproject.com/docs/reference-sources.html
-# Toggle source visibility
+# Toggle sceneitem visibility
 ```python
 def toggle(self):
     current_scene = obs.obs_scene_from_source(obs.obs_frontend_get_current_scene())
@@ -287,7 +287,7 @@ def toggle(self):
     boolean = not obs.obs_sceneitem_visible(scene_item)
     obs.obs_sceneitem_set_visible(scene_item, boolean)
 ```
-[Full example](src/toggle_source_vis.py)
+[Full example](src/toggle_sceneitem_vis.py)
 
 # Set current scene
 ```python
