@@ -649,7 +649,7 @@ There is no stdin therefore you can't use pdb , options are:
 # Links
 - [Scripts forum](https://obsproject.com/forum/resources/categories/scripts.5/) , [Github topic `obs-scripts`](https://github.com/topics/obs-scripts) , [Github topic `obs-script`](https://github.com/topics/obs-script)
 - [OBS Studio Repo](https://github.com/obsproject/obs-studio) , [obs-scripting-python.c](https://github.com/obsproject/obs-studio/blob/master/deps/obs-scripting/obs-scripting-python.c)
-- [Docs](https://obsproject.com/docs/) , [Docs/scripting](https://obsproject.com/docs/scripting.html) , [Docs/plugins](https://obsproject.com/docs/plugins.html) , [Docs index](https://obsproject.com/docs/genindex.html)
+- [Docs](https://obsproject.com/docs/) , [Docs/scripting](https://obsproject.com/docs/scripting.html) , [Docs/plugins](https://obsproject.com/docs/plugins.html) , [Docs index](https://obsproject.com/docs/genindex.html) ,[Wiki/Getting-Started-With-OBS-Scripting](https://github.com/obsproject/obs-studio/wiki/Getting-Started-With-OBS-Scripting)
 - obspython [Gist](https://gist.github.com/search?l=Python&q=obspython) , [Github](https://github.com/search?l=Python&o=desc&q=obspython&s=indexed&type=Code) , [grep.app](https://grep.app/search?q=obspython&filter[lang][0]=Python)
 - obslua [Gist](https://gist.github.com/search?l=Lua&o=desc&q=obslua&s=updated) , [Github](https://github.com/search?l=Lua&o=desc&q=obslua&s=indexed&type=Code) , [grep.app](https://grep.app/search?q=obslua&filter[lang][0]=Lua)
 - [Lua tips and tricks](https://obsproject.com/forum/threads/tips-and-tricks-for-lua-scripts.132256/)
