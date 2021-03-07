@@ -1,7 +1,14 @@
 # OBS Studio Python Scripting Cheatsheet
-- `obspython` OBS Studio API.Obs scripts examples in `/src` 
-- Each obs script example mostly will operate on *existsing* text source
-- It is possible to duplicate scripts and re-add them to OBS ( names must be different) 
+Getting started:
+- [Python](https://www.python.org/about/gettingstarted/)
+- [OBS Studio Scripting](https://github.com/obsproject/obs-studio/wiki/Getting-Started-With-OBS-Scripting)
+
+Consider cloning this repo and running examples(they are self contained) in OBS Studio,
+most of them will operate on *existing* text soure. Tip: you can create a copy of script,
+rename it, and add to OBS.So two of identical scripts will be run in parallel with separated namespaces. 
+Also check out [issues](https://github.com/upgradeQ/OBS-Studio-Python-Scripting-Cheatsheet-obspython-Examples-of-API/issues)  if you found any error or have a suggestion and 
+[discussions](https://github.com/upgradeQ/OBS-Studio-Python-Scripting-Cheatsheet-obspython-Examples-of-API/discussions) for collaboration,ideas and Q&A.
+
 # Table of content 
 - [Using classes](#using-classes)
 - [with statement](#with-statement)
@@ -26,6 +33,7 @@
 - [Hotkeys](#hotkeys)
 - [Play sound](#play-sound)
 - [Read and write private data from scripts or plugins](#read-and-write-private-data-from-scripts-or-plugins)
+- [Browser source interaction](#browser-source-interaction)
 - [Debug](#debug)
 - [Docs and code examples](#docs-and-code-examples)
 - [Links](#links)
@@ -624,6 +632,34 @@ obs.obs_data_release(settings)
 - [Full example read](src/read_private_data.py)
 - [Full example write](src/write_private_data.py) 
 
+# Browser source interaction
+```python
+def send_hotkey_to_browser(source, obs_htk_id, key_modifiers=None, key_up=False):
+
+    key = obs.obs_key_from_name(obs_htk_id)
+    vk = obs.obs_key_to_virtual_key(key)
+    event = obs.obs_key_event()
+    event.native_vkey = vk
+    event.modifiers = get_modifiers(key_modifiers)
+    event.native_modifiers = event.modifiers  # https://doc.qt.io/qt-5/qkeyevent.html
+    event.native_scancode = vk
+    event.text = ""
+    obs.obs_source_send_key_click(source, event, key_up)
+
+
+def press_tab(*p):
+    with source_auto_release(G.source_name) as source:
+        send_hotkey_to_browser(source, "OBS_KEY_TAB")
+        send_hotkey_to_browser(source, "OBS_KEY_TAB", key_up=True)
+
+
+def press_shift_tab(*p):
+    with source_auto_release(G.source_name) as source:
+        send_hotkey_to_browser(source, "OBS_KEY_TAB", {"shift": True})
+        send_hotkey_to_browser(source, "OBS_KEY_TAB", {"shift": True}, key_up=True)
+
+```
+- [Full example read](src/browser_source_interaction.py)
 
 # Debug
 There is no stdin therefore you can't use pdb , options are:
@@ -649,9 +685,10 @@ There is no stdin therefore you can't use pdb , options are:
 # Links
 - [Scripts forum](https://obsproject.com/forum/resources/categories/scripts.5/) , [Github topic `obs-scripts`](https://github.com/topics/obs-scripts) , [Github topic `obs-script`](https://github.com/topics/obs-script)
 - [OBS Studio Repo](https://github.com/obsproject/obs-studio) , [obs-scripting-python.c](https://github.com/obsproject/obs-studio/blob/master/deps/obs-scripting/obs-scripting-python.c)
-- [Docs](https://obsproject.com/docs/) , [Docs/scripting](https://obsproject.com/docs/scripting.html) , [Docs/plugins](https://obsproject.com/docs/plugins.html) , [Docs index](https://obsproject.com/docs/genindex.html) ,[Wiki/Getting-Started-With-OBS-Scripting](https://github.com/obsproject/obs-studio/wiki/Getting-Started-With-OBS-Scripting)
+- [Docs](https://obsproject.com/docs/) , [Docs/scripting](https://obsproject.com/docs/scripting.html) , [Docs/plugins](https://obsproject.com/docs/plugins.html) , [Docs index](https://obsproject.com/docs/genindex.html)
 - obspython [Gist](https://gist.github.com/search?l=Python&q=obspython) , [Github](https://github.com/search?l=Python&o=desc&q=obspython&s=indexed&type=Code) , [grep.app](https://grep.app/search?q=obspython&filter[lang][0]=Python)
 - obslua [Gist](https://gist.github.com/search?l=Lua&o=desc&q=obslua&s=updated) , [Github](https://github.com/search?l=Lua&o=desc&q=obslua&s=indexed&type=Code) , [grep.app](https://grep.app/search?q=obslua&filter[lang][0]=Lua)
+- [A Python bundle for integration with OBS scripting](https://github.com/zooba/obs-python)
 - [Lua tips and tricks](https://obsproject.com/forum/threads/tips-and-tricks-for-lua-scripts.132256/)
 - [Python 3.6.8 , 64 bit installer](https://www.python.org/downloads/release/python-368/)
 # Contribute
