@@ -65,7 +65,7 @@ def send_mouse_click_to_browser(
     y=0,
     button_type=obs.MOUSE_LEFT,
     mouse_up=False,
-    click_count=0,
+    click_count=1,
     key_modifiers=None,
 ):
     event = obs.obs_mouse_event()
