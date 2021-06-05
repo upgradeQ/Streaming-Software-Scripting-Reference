@@ -21,7 +21,7 @@ def refresh_pressed(props, prop):
         "| function | source code | latest docs  | websocket impl | scripting | \n"
     )
     nice_data += "| ---: | :---: | :---: | :---: | :---: |\n"
-    for k, v in data.items():
+    for k, v in sorted(data.items(), key=lambda i: i[0]):
         gs = bool(k.lower().startswith("gs"))
         underscore = bool(k.startswith("_"))
         quat = bool(k.lower().startswith("quat"))
