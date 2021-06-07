@@ -210,26 +210,36 @@ To identify with `obs_source_get_unversioned_id` , or creating source/filter.
 ## Filters
 | Name | Source type identifier string |
 | --- | --- | 
+| Async Delay | async_delay_filter |
+| Chroma Key | chroma_key_filter |
+| Chroma Key V2 | chroma_key_filter_v2 |
+| Color Correction | color_filter |
+| Color Correction V2 | color_filter_v2 |
+| Color Key | color_key_filter |
+| Color Key V2 | color_key_filter_v2 |
+| Color Grade | color_grade_filter |
 | Compressor | compressor_filter | 
+| Crop/Pad | crop_filter | 
 | Expander | expander_filter | 
 | Gain | gain_filter | 
+| GPU Delay | gpu_delay_filter | 
+| Image Mask/Blend | mask_filter |
 | Invert Polarity | invert_polarity_filter |
 | Limiter | limiter_filter | 
+| Luma Key | luma_key_filter |
+| Luma Key V2 | luma_key_filter_v2 |
+| Mask | mask_filter |
+| Mask V2 | mask_filter_v2 |
 | Noise Gate | noise_gate_filter |
 | Noise Suppression | noise_suppress_filter |
-| VST 2.x Plug-in | vst_filter |
-| Video Delay (Async) | async_delay_filter |
-| Chroma Key | chroma_key_filter |
-| Color Correction | color_filter |
-| Color Key | color_key_filter |
-| Crop/Pad | crop_filter | 
-| Image Mask/Blend | mask_filter |
-| Luma Key | luma_key_filter |
+| Noise Suppression V2 | noise_suppress_filter_v2 |
 | Render Delay | gpu_delay |
 | Scaling/Aspect Ratio | scale_filter |
 | Scroll | scroll_filter | 
 | Sharpen | sharpness_filter | 
-
+| Sharpen V2 | sharpness_filter_v2 | 
+| Video Delay (Async) | async_delay_filter |
+| VST 2.x Plug-in | vst_filter |
 
 # Add source
 Create source and add it to current scene 
