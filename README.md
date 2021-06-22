@@ -34,7 +34,9 @@ Also check out [issues](https://github.com/upgradeQ/OBS-Studio-Python-Scripting-
 - [Play sound](#play-sound)
 - [Read and write private data from scripts or plugins](#read-and-write-private-data-from-scripts-or-plugins)
 - [Browser source interaction](#browser-source-interaction)
+- [Acess source dB volume level](#access-source-db-volume-level)
 - [Debug](#debug)
+- [Security](#security)
 - [Docs and code examples](#docs-and-code-examples)
 - [Links](#links)
 - [Contribute](#contribute)
@@ -671,10 +673,39 @@ def press_shift_tab(*p):
 ```
 - [Full example read](src/browser_source_interaction.py)
 
+# Acess source dB volume level
+There is FFI `ctypes` module in Python to wrap native `obs` lib.
+However,to run it on GNU/Linux you must start obs with `LD_PRELOAD`.
+```bash
+ubsdrive3@usbdrive3:~$ LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libpython3.9.so obs
+```
+It might be in different directory, use `find /usr -name 'libpython*' ` to
+find exact location.
+
+```python
+volmeter_callback_t = CFUNCTYPE(
+    None, c_void_p, POINTER(c_float), POINTER(c_float), POINTER(c_float)
+)
+...
+wrap(
+    "obs_volmeter_add_callback",
+    None,
+    argtypes=[POINTER(Volmeter), volmeter_callback_t, c_void_p],
+)
+...
+@volmeter_callback_t
+def volmeter_callback(data, mag, peak, input):
+    G.noise = float(peak[0])
+```
+
+- [Full example read](src/volmeter_via_ffi.py)
+
 # Debug
 There is no stdin therefore you can't use pdb , options are:
 - using `print`
+- using generated log file (contains information about memory leaks)
 - using pycharm remote debugging (localhost)
+- using threading 
 - using [vscode](https://code.visualstudio.com/docs/python/debugging) attach to the process:
     - Load python extension
     - open script file , `pip install debugpy` , place  `debugpy.breakpoint()` somewhere
@@ -685,9 +716,21 @@ There is no stdin therefore you can't use pdb , options are:
 
 ![screenshot](src/assets/debug.png)  
 
+# Security
+- "Calling home" - see [`#4044`](https://github.com/obsproject/obs-studio/issues/4044)
+- On GNU/Linux there is handy program called `tcpdump`, to run a check against OBS Studio - use this command (it is active on 443 port on start and on end)
+```bash
+# tcpdump -i <your_interface_e_g_wifi_or_wire> 'port 443'
+```
+- Avoid using `sudo` or admin, check hashsums, do backups, do updates, etc...
+- There is no confirmation for loading Lua or Python scripts - they can be added/overwritten via .json key
+- Also solutions for Python source code obfuscation & loading from shared (compiled) library do exist.Applying that will make it a bit harder to reverse-engineer your code.
+
 # Docs and code examples
 
-[Generated export.md](src/export.md) contains all variables and functions available in `obspython` formatted with markdown. Table consist of links to appropriate search terms in OBS Studio repository, and obswebsocket,links to scripts in `obspython` and `obslua` with each script within github code search.`gs_*` and `matrix_*` functions exluded from that table.   
+- [`Generated export.md`](src/export.md)
+
+contains all variables and functions available in `obspython` formatted with markdown. Table consist of links to appropriate search terms in OBS Studio repository and obswebsocket,links to scripts in `obspython` and `obslua` with each script within github code search.`gs_*` and `matrix_*` functions exluded from that table.   
 [Full example](src/export_md.py)  
 `Note` : starting from 2020.12.17 Github Code Search no longer works as it was, see also this [thread](https://github.community/t/feedback-on-changes-to-code-search-indexing/150660)  
 
@@ -696,7 +739,7 @@ There is no stdin therefore you can't use pdb , options are:
 - [Scripts forum](https://obsproject.com/forum/resources/categories/scripts.5/) , [Github topic `obs-scripts`](https://github.com/topics/obs-scripts) , [Github topic `obs-script`](https://github.com/topics/obs-script)
 - [OBS Studio Repo](https://github.com/obsproject/obs-studio) , [obs-scripting-python.c](https://github.com/obsproject/obs-studio/blob/master/deps/obs-scripting/obs-scripting-python.c)
 - [Docs](https://obsproject.com/docs/) , [Docs/scripting](https://obsproject.com/docs/scripting.html) , [Docs/plugins](https://obsproject.com/docs/plugins.html) , [Docs index](https://obsproject.com/docs/genindex.html)
-- obspython [Gist](https://gist.github.com/search?l=Python&q=obspython) , [Github](https://github.com/search?l=Python&o=desc&q=obspython&s=indexed&type=Code) , [grep.app](https://grep.app/search?q=obspython&filter[lang][0]=Python)
+- obspython [Gist](https://gist.github.com/search?l=Python&q=obspython&s=updated) , [Github](https://github.com/search?l=Python&o=desc&q=obspython&s=indexed&type=Code) , [grep.app](https://grep.app/search?q=obspython&filter[lang][0]=Python)
 - obslua [Gist](https://gist.github.com/search?l=Lua&o=desc&q=obslua&s=updated) , [Github](https://github.com/search?l=Lua&o=desc&q=obslua&s=indexed&type=Code) , [grep.app](https://grep.app/search?q=obslua&filter[lang][0]=Lua)
 - [A Python bundle for integration with OBS scripting](https://github.com/zooba/obs-python)
 - [Lua tips and tricks](https://obsproject.com/forum/threads/tips-and-tricks-for-lua-scripts.132256/)
