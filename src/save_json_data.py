@@ -1,4 +1,4 @@
-import obspython as obs
+import obspython as S
 from pathlib import Path
 
 
@@ -14,7 +14,7 @@ def save(prop, props):
     p = Path(__file__).absolute()  # current script path
     file = p.parent / "saved_settings.json"
     try:
-        content = obs.obs_data_get_json(Data._settings_)
+        content = S.obs_data_get_json(Data._settings_)
         with open(file, "w") as f:
             f.write(content)
     except Exception as e:
@@ -22,15 +22,15 @@ def save(prop, props):
 
 
 def script_properties():
-    props = obs.obs_properties_create()
-    obs.obs_properties_add_text(props, "_text", "text", obs.OBS_TEXT_DEFAULT)
-    obs.obs_properties_add_int(props, "_int", "int", 1, 100, 1)
+    props = S.obs_properties_create()
+    S.obs_properties_add_text(props, "_text", "text", S.OBS_TEXT_DEFAULT)
+    S.obs_properties_add_int(props, "_int", "int", 1, 100, 1)
 
-    obs.obs_properties_add_button(props, "save", "Save", save)
+    S.obs_properties_add_button(props, "save", "Save", save)
     return props
 
 
 def script_update(settings):
-    Data._text_ = obs.obs_data_get_string(settings, "_text")
-    Data._int_ = obs.obs_data_get_int(settings, "_int")
+    Data._text_ = S.obs_data_get_string(settings, "_text")
+    Data._int_ = S.obs_data_get_int(settings, "_int")
     Data._settings_ = settings

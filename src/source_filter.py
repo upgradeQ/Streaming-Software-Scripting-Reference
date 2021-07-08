@@ -1,36 +1,36 @@
-import obspython as obs
+import obspython as S
 
 
 class Example:
     def crete_text_source(self):
-        current_scene = obs.obs_frontend_get_current_scene()
-        scene = obs.obs_scene_from_source(current_scene)
-        settings = obs.obs_data_create()
+        current_scene = S.obs_frontend_get_current_scene()
+        scene = S.obs_scene_from_source(current_scene)
+        settings = S.obs_data_create()
 
-        obs.obs_data_set_string(
+        S.obs_data_set_string(
             settings, "text", "The quick brown fox jumps over the lazy dog"
         )
         # doesnt work on private sources
-        source = obs.obs_source_create("text_gdiplus", "1test_py", settings, None)
-        obs.obs_scene_add(scene, source)
+        source = S.obs_source_create("text_gdiplus", "1test_py", settings, None)
+        S.obs_scene_add(scene, source)
 
-        obs.obs_scene_release(scene)
-        obs.obs_data_release(settings)
-        obs.obs_source_release(source)
+        S.obs_scene_release(scene)
+        S.obs_data_release(settings)
+        S.obs_source_release(source)
 
     def add_filter_to_source(self):
-        source = obs.obs_get_source_by_name("1test_py")
-        settings = obs.obs_data_create()
+        source = S.obs_get_source_by_name("1test_py")
+        settings = S.obs_data_create()
 
-        obs.obs_data_set_int(settings, "opacity", 50)
-        source_color = obs.obs_source_create_private(
+        S.obs_data_set_int(settings, "opacity", 50)
+        source_color = S.obs_source_create_private(
             "color_filter", "opacity to 50", settings
         )
-        obs.obs_source_filter_add(source, source_color)
+        S.obs_source_filter_add(source, source_color)
 
-        obs.obs_source_release(source)
-        obs.obs_data_release(settings)
-        obs.obs_source_release(source_color)
+        S.obs_source_release(source)
+        S.obs_data_release(settings)
+        S.obs_source_release(source_color)
 
 
 eg = Example()  # class created ,obs part starts
@@ -49,7 +49,7 @@ def script_description():
 
 
 def script_properties():  # ui
-    props = obs.obs_properties_create()
-    obs.obs_properties_add_button(props, "button1", "Add color source", add_pressed)
-    obs.obs_properties_add_button(props, "button", "Add text source", txt_pressed)
+    props = S.obs_properties_create()
+    S.obs_properties_add_button(props, "button1", "Add color source", add_pressed)
+    S.obs_properties_add_button(props, "button", "Add text source", txt_pressed)
     return props

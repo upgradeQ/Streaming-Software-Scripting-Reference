@@ -1,4 +1,4 @@
-import obspython as obs
+import obspython as S
 
 # from pprint import pprint
 
@@ -52,6 +52,6 @@ def refresh_pressed(props, prop):
 
 
 def script_properties():
-    props = obs.obs_properties_create()
-    obs.obs_properties_add_button(props, "button", "Refresh", refresh_pressed)
+    props = S.obs_properties_create()
+    S.obs_properties_add_button(props, "button", "Refresh", refresh_pressed)
     return props

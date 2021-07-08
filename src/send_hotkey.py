@@ -1,4 +1,4 @@
-import obspython as obs
+import obspython as S
 
 
 def send_hotkey(obs_htk_id, key_modifiers=None):
@@ -12,28 +12,28 @@ def send_hotkey(obs_htk_id, key_modifiers=None):
     modifiers = 0
 
     if shift:
-        modifiers |= obs.INTERACT_SHIFT_KEY
+        modifiers |= S.INTERACT_SHIFT_KEY
     if control:
-        modifiers |= obs.INTERACT_CONTROL_KEY
+        modifiers |= S.INTERACT_CONTROL_KEY
     if alt:
-        modifiers |= obs.INTERACT_ALT_KEY
+        modifiers |= S.INTERACT_ALT_KEY
     if command:
-        modifiers |= obs.INTERACT_COMMAND_KEY
+        modifiers |= S.INTERACT_COMMAND_KEY
 
-    combo = obs.obs_key_combination()
+    combo = S.obs_key_combination()
     combo.modifiers = modifiers
-    combo.key = obs.obs_key_from_name(obs_htk_id)
+    combo.key = S.obs_key_from_name(obs_htk_id)
 
     if not modifiers and (
-        # obs.OBS_KEY_NONE = 0 ?
+        # S.OBS_KEY_NONE = 0 ?
         combo.key == 0
-        or combo.key >= obs.OBS_KEY_LAST_VALUE
+        or combo.key >= S.OBS_KEY_LAST_VALUE
     ):
         raise Exception("invalid key-modifier combination")
 
-    obs.obs_hotkey_inject_event(combo, False)
-    obs.obs_hotkey_inject_event(combo, True)
-    obs.obs_hotkey_inject_event(combo, False)
+    S.obs_hotkey_inject_event(combo, False)
+    S.obs_hotkey_inject_event(combo, True)
+    S.obs_hotkey_inject_event(combo, False)
 
 
 def press_1(*p):
@@ -45,7 +45,7 @@ def press_shift_1(*p):
 
 
 def script_properties():
-    props = obs.obs_properties_create()
-    obs.obs_properties_add_button(props, "button1", "Press 1", press_1)
-    obs.obs_properties_add_button(props, "button2", "Press shift + 1", press_shift_1)
+    props = S.obs_properties_create()
+    S.obs_properties_add_button(props, "button1", "Press 1", press_1)
+    S.obs_properties_add_button(props, "button2", "Press shift + 1", press_shift_1)
     return props

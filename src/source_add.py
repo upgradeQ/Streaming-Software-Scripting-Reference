@@ -1,21 +1,21 @@
-import obspython as obs
+import obspython as S
 
 
 class Example:
     def crete_text_source(self):
-        current_scene = obs.obs_frontend_get_current_scene()
-        scene = obs.obs_scene_from_source(current_scene)
-        settings = obs.obs_data_create()
+        current_scene = S.obs_frontend_get_current_scene()
+        scene = S.obs_scene_from_source(current_scene)
+        settings = S.obs_data_create()
 
-        obs.obs_data_set_string(
+        S.obs_data_set_string(
             settings, "text", "The quick brown fox jumps over the lazy dog"
         )
-        source = obs.obs_source_create_private("text_gdiplus", "test_py", settings)
-        obs.obs_scene_add(scene, source)
+        source = S.obs_source_create_private("text_gdiplus", "test_py", settings)
+        S.obs_scene_add(scene, source)
 
-        obs.obs_scene_release(scene)
-        obs.obs_data_release(settings)
-        obs.obs_source_release(source)
+        S.obs_scene_release(scene)
+        S.obs_data_release(settings)
+        S.obs_source_release(source)
 
 
 eg = Example()  # class created ,obs part starts
@@ -30,6 +30,6 @@ def script_description():
 
 
 def script_properties():  # ui
-    props = obs.obs_properties_create()
-    obs.obs_properties_add_button(props, "button", "Add text source", add_pressed)
+    props = S.obs_properties_create()
+    S.obs_properties_add_button(props, "button", "Add text source", add_pressed)
     return props

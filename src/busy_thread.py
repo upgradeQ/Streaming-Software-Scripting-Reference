@@ -1,18 +1,18 @@
-import obspython as obs
+import obspython as S
 import threading
 from time import sleep
 
 
 def hook(obs_htk_id, htk_id, callback):
     json_data = '{"%s":[{"key":"%s"}]}' % (htk_id, obs_htk_id)
-    s = obs.obs_data_create_from_json(json_data)
+    s = S.obs_data_create_from_json(json_data)
 
-    a = obs.obs_data_get_array(s, htk_id)
-    h = obs.obs_hotkey_register_frontend(htk_id, obs_htk_id, callback)
-    obs.obs_hotkey_load(h, a)
+    a = S.obs_data_get_array(s, htk_id)
+    h = S.obs_hotkey_register_frontend(htk_id, obs_htk_id, callback)
+    S.obs_hotkey_load(h, a)
 
-    obs.obs_data_array_release(a)
-    obs.obs_data_release(s)
+    S.obs_data_array_release(a)
+    S.obs_data_release(s)
 
 
 data = lambda: ...
@@ -42,6 +42,6 @@ def busy_thread():
 
 print('Press the "~" to toggle on/off')
 hook("OBS_KEY_ASCIITILDE", "id_", callback)
-obs.timer_add(lambda: print(data.status), 500)
+S.timer_add(lambda: print(data.status), 500)
 t = threading.Thread(target=busy_thread)
 t.start()

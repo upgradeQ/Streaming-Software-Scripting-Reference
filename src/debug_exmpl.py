@@ -1,11 +1,11 @@
-import obspython as obs
+import obspython as S
 import debugpy
 
 
 class Hotkey:
     def __init__(self, callback, obs_settings, _id):
         self.obs_data = obs_settings
-        self.hotkey_id = obs.OBS_INVALID_HOTKEY_ID
+        self.hotkey_id = S.OBS_INVALID_HOTKEY_ID
         self.hotkey_saved_key = None
         self.callback = callback
         self._id = _id
@@ -16,23 +16,23 @@ class Hotkey:
 
     def register_hotkey(self):
         description = "Htk " + str(self._id)
-        self.hotkey_id = obs.obs_hotkey_register_frontend(
+        self.hotkey_id = S.obs_hotkey_register_frontend(
             "htk_id" + str(self._id), description, self.callback
         )
-        obs.obs_hotkey_load(self.hotkey_id, self.hotkey_saved_key)
+        S.obs_hotkey_load(self.hotkey_id, self.hotkey_saved_key)
 
     def load_hotkey(self):
-        self.hotkey_saved_key = obs.obs_data_get_array(
+        self.hotkey_saved_key = S.obs_data_get_array(
             self.obs_data, "htk_id" + str(self._id)
         )
-        obs.obs_data_array_release(self.hotkey_saved_key)
+        S.obs_data_array_release(self.hotkey_saved_key)
 
     def save_hotkey(self):
-        self.hotkey_saved_key = obs.obs_hotkey_save(self.hotkey_id)
-        obs.obs_data_set_array(
+        self.hotkey_saved_key = S.obs_hotkey_save(self.hotkey_id)
+        S.obs_data_set_array(
             self.obs_data, "htk_id" + str(self._id), self.hotkey_saved_key
         )
-        obs.obs_data_array_release(self.hotkey_saved_key)
+        S.obs_data_array_release(self.hotkey_saved_key)
 
 
 class h:
@@ -54,13 +54,13 @@ h1 = h()
 
 
 def script_properties():
-    props = obs.obs_properties_create()
-    obs.obs_properties_add_text(props, "_text1", "_text1:", obs.OBS_TEXT_DEFAULT)
+    props = S.obs_properties_create()
+    S.obs_properties_add_text(props, "_text1", "_text1:", S.OBS_TEXT_DEFAULT)
     return props
 
 
 def script_update(settings):
-    _text1 = obs.obs_data_get_string(settings, "_text1")
+    _text1 = S.obs_data_get_string(settings, "_text1")
     e1.txt = _text1
 
 
