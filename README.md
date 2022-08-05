@@ -14,6 +14,7 @@ Also check out [issues](https://github.com/upgradeQ/OBS-Studio-Python-Scripting-
 - [Property modification](#property-modification)
 - [Additional input](#additional-input)
 - [obs_data](#obs_data)
+- [Print all source settings and filter names](#print_all_source_settings_and_filter_names)
 - [save settings as json](#save-settings-as-json)
 - [Source's and filters with identifier string](#sources-and-filters-with-identifier-string)
 - [Add source](#add-source)
@@ -32,11 +33,12 @@ Also check out [issues](https://github.com/upgradeQ/OBS-Studio-Python-Scripting-
 - [Play sound](#play-sound)
 - [Read and write private data from scripts or plugins](#read-and-write-private-data-from-scripts-or-plugins)
 - [Browser source interaction](#browser-source-interaction)
-- [Acess source dB volume level](#access-source-db-volume-level)
+- [Access source dB volume level](#access-source-db-volume-level)
 - [Get current profile settings via ffi](#get-current-profile-settings-via-ffi)
 - [Debug](#debug)
 - [Security](#security)
 - [Docs and code examples](#docs-and-code-examples)
+- [Changes between versions](#changes-between-versions)
 - [Links](#links)
 - [Contribute](#contribute)
 
@@ -119,6 +121,35 @@ https://obsproject.com/docs/reference-properties.html#property-modification-func
 - `obs_data_get_bool`
 - `obs_data_get_obj`
 - `obs_data_get_array`
+
+## Print all source settings and filter names
+
+```python
+source = S.obs_get_source_by_name(self.source_name)
+settings = S.obs_source_get_settings(source)
+psettings = S.obs_source_get_private_settings(source)
+dsettings = S.obs_data_get_defaults(settings)
+pdsettings = S.obs_data_get_defaults(psettings)
+print("[---------- settings ----------")
+print(S.obs_data_get_json(settings))
+print("---------- private_settings ----------")
+print(S.obs_data_get_json(psettings))
+print("---------- default settings for this source type ----------")
+print(S.obs_data_get_json(dsettings))
+print("---------- default private settings for this source type ----------")
+print(S.obs_data_get_json(pdsettings))
+... 
+print("[--------- filter names --------")
+for i in range(filter_count):
+    settings = S.obs_data_array_item(filters, i)
+    filter_name = S.obs_data_get_string(settings, "name")
+    S.obs_data_release(settings)
+    print(filter_name)
+print(" filter names of %s --------" % self.source_name)
+
+```
+
+[Full source](src/print_all_source_settings_and_filter_names.py)  
 
 ## Save settings as json
 
@@ -634,7 +665,7 @@ def press_shift_tab(*p):
 ```
 - [Full source](src/browser_source_interaction.py)
 
-# Acess source dB volume level
+# Access source dB volume level
 There is FFI `ctypes` module in Python to wrap native `obs` lib.
 However,to run it on GNU/Linux you must start obs with `LD_PRELOAD`.
 ```bash
@@ -705,16 +736,24 @@ There is no stdin therefore you can't use pdb , options are:
 ```bash
 # tcpdump -i <your_interface_e_g_wifi_or_wire> 'port 443'
 ```
-- Avoid using `sudo` or admin, check hashsums, do backups, do updates, etc...
+- Avoid using `sudo` or admin, check hashsums, do backups, do updates, setup a firewall, do hardening, etc...
 - There is no confirmation for loading Lua or Python scripts - they can be added/overwritten via .json key
-- Also solutions for Python source code obfuscation & loading from shared (compiled) library do exist.Applying that will make it a bit harder to reverse-engineer your code.
+- Also solutions for Python source code obfuscation & loading from shared (compiled) library do exist. Applying that will make it a bit harder to reverse-engineer your private code.
+- Legal info [link](https://uspto.report/company/Wizards-Of-Obs-L-L-C)
+- Privacy policy - https://obsproject.com/privacy-policy  - keyword *downlodable software*
 
 # Docs and code examples
 
 - [`Generated export.md`](src/export.md)
 
-contains all variables and functions available in `obspython` formatted with markdown. Table consist of links to appropriate search terms in OBS Studio repository and obswebsocket,links to scripts in `obspython` and `obslua` with each script within github code search.`gs_*` and `matrix_*` functions exluded from that table.   
+contains all variables and functions available in `obspython` formatted with markdown. Table consist of links to appropriate search terms in OBS Studio repository, links to scripts in `obspython` and `obslua` with each script within github code search.`gs_*` and `matrix_*` functions exluded from that table.
 [Export names](src/export_md.py)  
+
+# Changes between versions
+* Since OBS Studio 28.0 Beta 1 it is possible to use any python3 version on hardware which supports Qt 6.
+* Qt 6 has dropped support for Windows 7 & 8, macOS 10.13 & 10.14, Ubuntu 18.04 and all 32-bit operating systems. As such, OBS will no longer be supported on these platforms.
+* Added native support for websocket 
+
 
 # Links
 - [Scripts forum](https://obsproject.com/forum/resources/categories/scripts.5/) , [Github topic `obs-scripts`](https://github.com/topics/obs-scripts) , [Github topic `obs-script`](https://github.com/topics/obs-script)
