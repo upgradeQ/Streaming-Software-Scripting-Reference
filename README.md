@@ -14,7 +14,7 @@ Also check out [issues](https://github.com/upgradeQ/OBS-Studio-Python-Scripting-
 - [Property modification](#property-modification)
 - [Additional input](#additional-input)
 - [obs_data](#obs_data)
-- [Print all source settings and filter names](#print_all_source_settings_and_filter_names)
+- [Print all source settings and filter names](#print-all-source-settings-and-filter-names)
 - [save settings as json](#save-settings-as-json)
 - [Source's and filters with identifier string](#sources-and-filters-with-identifier-string)
 - [Add source](#add-source)
