@@ -15,7 +15,7 @@ Also check out [issues](https://github.com/upgradeQ/OBS-Studio-Python-Scripting-
 - [Additional input](#additional-input)
 - [obs_data](#obs_data)
 - [Print all source settings and filter names](#print-all-source-settings-and-filter-names)
-- [save settings as json](#save-settings-as-json)
+- [Save settings as json](#save-settings-as-json)
 - [Source's and filters with identifier string](#sources-and-filters-with-identifier-string)
 - [Add source](#add-source)
 - [Move source](#move-source)
@@ -33,6 +33,7 @@ Also check out [issues](https://github.com/upgradeQ/OBS-Studio-Python-Scripting-
 - [Play sound](#play-sound)
 - [Read and write private data from scripts or plugins](#read-and-write-private-data-from-scripts-or-plugins)
 - [Browser source interaction](#browser-source-interaction)
+- [Browser source receive JSON data](#browser-source-receive-json-data)
 - [Access source dB volume level](#access-source-db-volume-level)
 - [Get current profile settings via ffi](#get-current-profile-settings-via-ffi)
 - [Debug](#debug)
@@ -173,48 +174,52 @@ To identify with `obs_source_get_unversioned_id` , or creating source/filter.
 ## Source's
 | Name | Source type identifier string |
 | --- | --- | 
+| Application Audio Capture (BETA) | wasapi_process_output_capture |
 | Browser | browser_source | 
 | Color Source | color_source |
 | Display Capture | monitor_capture |
 | Game Capture | game_capture |
-| Image | image_source | 
 | Image Slide Show | slideshow |
+| Image | image_source | 
 | Media Source | ffmpeg_source |
 | Text (GDI+) | text_gdiplus |
 | Window Capture | window_capture |
 ## Filters
 | Name | Source type identifier string |
 | --- | --- | 
+| 3-Band Equalizer | basic_eq_filter |
 | Async Delay | async_delay_filter |
-| Chroma Key | chroma_key_filter |
 | Chroma Key V2 | chroma_key_filter_v2 |
-| Color Correction | color_filter |
+| Chroma Key | chroma_key_filter |
 | Color Correction V2 | color_filter_v2 |
-| Color Key | color_key_filter |
-| Color Key V2 | color_key_filter_v2 |
+| Color Correction | color_filter |
 | Color Grade | color_grade_filter |
+| Color Key V2 | color_key_filter_v2 |
+| Color Key | color_key_filter |
 | Compressor | compressor_filter | 
 | Crop/Pad | crop_filter | 
 | Expander | expander_filter | 
-| Gain | gain_filter | 
 | GPU Delay | gpu_delay_filter | 
+| Gain | gain_filter | 
+| HDR Tone Mapping (Override) | hdr_tonemap_filter |
 | Image Mask/Blend | mask_filter |
 | Invert Polarity | invert_polarity_filter |
 | Limiter | limiter_filter | 
-| Luma Key | luma_key_filter |
 | Luma Key V2 | luma_key_filter_v2 |
-| Mask | mask_filter |
+| Luma Key | luma_key_filter |
 | Mask V2 | mask_filter_v2 |
+| Mask | mask_filter |
 | Noise Gate | noise_gate_filter |
-| Noise Suppression | noise_suppress_filter |
 | Noise Suppression V2 | noise_suppress_filter_v2 |
+| Noise Suppression | noise_suppress_filter |
 | Render Delay | gpu_delay |
 | Scaling/Aspect Ratio | scale_filter |
 | Scroll | scroll_filter | 
-| Sharpen | sharpness_filter | 
 | Sharpen V2 | sharpness_filter_v2 | 
-| Video Delay (Async) | async_delay_filter |
+| Sharpen | sharpness_filter | 
+| Upward Compressor | upward_compressor_filter |
 | VST 2.x Plug-in | vst_filter |
+| Video Delay (Async) | async_delay_filter |
 
 # Add source
 Create source and add it to current scene 
@@ -443,7 +448,7 @@ def callback(calldata):
     print("on source show",S.obs_source_get_name(source))
 ```
 
-**destroy**, **remove**, **save**, **load**, **activate**, **deactivate**, **show**, **hide**, **mute**, **push_to_mute_changed**, **push_to_mute_delay**, **push_to_talk_changed**, **push_to_talk_delay**, **enable**, **rename**, **volume**, **update_properties**, **update_flags**, **audio_sync**, **audio_mixers**, **filter_add**, **filter_remove**, **reorder_filters**, **transition_start**, **transition_video_stop**, **transition_stop**, **media_started**, **media_ended**, **media_pause**, **media_play**, **media_restart**, **media_stopped**, **media_next**, **media_previous** 
+**destroy**, **remove**, **save**, **load**, **activate**, **deactivate**, **show**, **hide**, **mute**, **push_to_mute_changed**, **push_to_mute_delay**, **push_to_talk_changed**, **push_to_talk_delay**, **enable**, **rename**, **volume**, **update_properties**, **update_flags**, **audio_sync**, **audio_mixers**, **filter_add**, **filter_remove**, **reorder_filters**, **transition_start**, **transition_video_stop**, **transition_stop**, **media_started**, **media_ended**, **media_pause**, **media_play**, **media_restart**, **media_stopped**, **media_next**, **media_previous**, **update**
 
 https://obsproject.com/docs/reference-sources.html#source-signals
 
@@ -664,6 +669,36 @@ def press_shift_tab(*p):
 
 ```
 - [Full source](src/browser_source_interaction.py)
+
+# Browser source receive JSON data
+```python
+cd = S.calldata_create()
+ph = S.obs_source_get_proc_handler(source)
+S.calldata_set_string(cd, "eventName", "my-test-event")
+S.calldata_set_string(cd, "jsonString", '{"key123": "\\nvalue123"}')
+S.proc_handler_call(ph, "javascript_event", cd)
+S.calldata_destroy(cd)
+```
+
+Page source code, currently has no permission requirements. 
+
+```javascript
+
+<!DOCTYPE html>
+
+<body style="background-color:aquamarine;">
+   <h1>HTML h1 in body element</h1>
+</body>
+
+<script type="text/javascript">
+  window.addEventListener('my-test-event', function(event) {
+    document.body.innerHTML +=(event.detail['key123']);
+  })
+</script>
+```
+
+
+- [Full source](src/browser_source_json.py)
 
 # Access source dB volume level
 There is FFI `ctypes` module in Python to wrap native `obs` lib.

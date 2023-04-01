@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+
+<body style="background-color:aquamarine;">
+   <h1>HTML h1 in body element</h1>
+</body>
+
+<script type="text/javascript">
+  window.addEventListener('my-test-event', function(event) {
+    document.body.innerHTML +=(event.detail['key123']);
+  })
+</script>
