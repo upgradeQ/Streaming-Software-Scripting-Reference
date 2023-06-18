@@ -36,6 +36,7 @@ Also check out [issues](https://github.com/upgradeQ/OBS-Studio-Python-Scripting-
 - [Browser source receive JSON data](#browser-source-receive-json-data)
 - [Access source dB volume level](#access-source-db-volume-level)
 - [Get current profile settings via ffi](#get-current-profile-settings-via-ffi)
+- [Convert from SWIG type to ctype](#convert-from-swig-type-to-ctype)
 - [Debug](#debug)
 - [Security](#security)
 - [Docs and code examples](#docs-and-code-examples)
@@ -748,6 +749,18 @@ def output_to_stdout():
     print(s, l)
 ```
 - [Full source](src/get_config_via_ffi.py)
+
+# Convert from SWIG type to ctype
+```python
+cfg = cast(
+    c_void_p(int(S.obs_frontend_get_profile_config())), POINTER(Config)
+)
+```
+
+Note,that this uses `obspython.obs_frontend_get_profile_config` so there is no need to load additional libraries.
+
+- See also: [Gist: Get video frames programmatically](https://gist.github.com/upgradeQ/8f3d0c5158fa3b092f2f5d5b9c330584)
+
 
 # Debug
 There is no stdin therefore you can't use pdb , options are:

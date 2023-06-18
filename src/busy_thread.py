@@ -18,6 +18,7 @@ def hook(obs_htk_id, htk_id, callback):
 data = lambda: ...
 data.thread_paused = True
 data.status = "empty"
+data.shutdown = False
 
 
 def toggle_thread():
@@ -38,10 +39,17 @@ def busy_thread():
         else:
             sleep(0.5)
             data.status = "inactive"
+        if data.shutdown:
+            raise KeyboardInterrupt
 
 
-print('Press the "~" to toggle on/off')
-hook("OBS_KEY_ASCIITILDE", "id_", callback)
-S.timer_add(lambda: print(data.status), 500)
-t = threading.Thread(target=busy_thread)
-t.start()
+
+def script_load(settings):
+    print('Press the "~" to toggle on/off')
+    hook("OBS_KEY_ASCIITILDE", "id_", callback)
+    S.timer_add(lambda: print(data.status), 500)
+    t = threading.Thread(target=busy_thread)
+    t.start()
+
+def script_unload():
+    data.shutdown = True
