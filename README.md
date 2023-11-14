@@ -449,7 +449,7 @@ def callback(calldata):
     print("on source show",S.obs_source_get_name(source))
 ```
 
-**destroy**, **remove**, **save**, **load**, **activate**, **deactivate**, **show**, **hide**, **mute**, **push_to_mute_changed**, **push_to_mute_delay**, **push_to_talk_changed**, **push_to_talk_delay**, **enable**, **rename**, **volume**, **update_properties**, **update_flags**, **audio_sync**, **audio_mixers**, **filter_add**, **filter_remove**, **reorder_filters**, **transition_start**, **transition_video_stop**, **transition_stop**, **media_started**, **media_ended**, **media_pause**, **media_play**, **media_restart**, **media_stopped**, **media_next**, **media_previous**, **update**
+**destroy**, **remove**, **save**, **load**, **activate**, **deactivate**, **show**, **hide**, **mute**, **push_to_mute_changed**, **push_to_mute_delay**, **push_to_talk_changed**, **push_to_talk_delay**, **enable**, **rename**, **volume**, **update_properties**, **update_flags**, **audio_sync**, **audio_mixers**, **filter_add**, **filter_remove**, **reorder_filters**, **transition_start**, **transition_video_stop**, **transition_stop**, **media_started**, **media_ended**, **media_pause**, **media_play**, **media_restart**, **media_stopped**, **media_next**, **media_previous**, **update**, **hooked**, **unhooked**
 
 https://obsproject.com/docs/reference-sources.html#source-signals
 
@@ -759,7 +759,7 @@ cfg = cast(
 
 Note,that this uses `obspython.obs_frontend_get_profile_config` so there is no need to load additional libraries.
 
-- See also: [Gist: Get video frames programmatically](https://gist.github.com/upgradeQ/8f3d0c5158fa3b092f2f5d5b9c330584)
+- See also: [Get video frames programmatically](src/get_source_frame_data_ffi.py)
 
 
 # Debug
@@ -794,13 +794,20 @@ There is no stdin therefore you can't use pdb , options are:
 
 - [`Generated export.md`](src/export.md)
 
-contains all variables and functions available in `obspython` formatted with markdown. Table consist of links to appropriate search terms in OBS Studio repository, links to scripts in `obspython` and `obslua` with each script within github code search.`gs_*` and `matrix_*` functions exluded from that table.
+contains all variables and functions available in `obspython` formatted with markdown. Table consist of links to appropriate search terms in OBS Studio repository, links to scripts in `obspython` and `obslua` with each script within GitHub code search.`gs_*` and `matrix_*` functions exluded from that table.
 [Export names](src/export_md.py)  
 
+- [`Generated export including graphics index.csv`](src/export_all.csv) - All variable and function exports.
+- [`Generated export libobs for ctypes index.csv`](src/dumps_libobs.csv) - Created using `dumpbin` tool with this command `.\dumpbin /exports "C:\Program Files\obs-studio\bin\64bit\obs.dll"` 
+
+
 # Changes between versions
-* Since OBS Studio 28.0 Beta 1 it is possible to use any python3 version on hardware which supports Qt 6.
+* Since OBS Studio 28.0 Beta 1 it is possible to use most python3 versions on hardware which supports Qt 6.
 * Qt 6 has dropped support for Windows 7 & 8, macOS 10.13 & 10.14, Ubuntu 18.04 and all 32-bit operating systems. As such, OBS will no longer be supported on these platforms.
 * Added native support for websocket 
+* 30.0.0 version - Python 3.11 support for Windows and mac OS
+* 30.0.0 version - Lua binary libraries loading
+* 30.0.0 version - New source signals & procedures - hooked,unhooked; procedure - get_hooked
 
 
 # Links
