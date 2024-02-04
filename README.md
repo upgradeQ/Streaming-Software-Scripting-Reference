@@ -37,6 +37,7 @@ Also check out [issues](https://github.com/upgradeQ/OBS-Studio-Python-Scripting-
 - [Access source dB volume level](#access-source-db-volume-level)
 - [Get current profile settings via ffi](#get-current-profile-settings-via-ffi)
 - [Convert from SWIG type to ctype](#convert-from-swig-type-to-ctype)
+- [Set current stream key](#set-current-stream-key)
 - [Debug](#debug)
 - [Security](#security)
 - [Docs and code examples](#docs-and-code-examples)
@@ -579,6 +580,7 @@ def send_hotkey(obs_htk_id, key_modifiers=None):
 - [Example with global ](src/hotkey_exmpl.py)
 - [Full example with json](src/hotkey_json.py)  
 - [Full example with send hotkey](src/send_hotkey.py)
+- [Example with many hotkeys](src/hotkey_many.py)
 
 See also:  
 https://github.com/obsproject/obs-studio/blob/master/libobs/obs-hotkeys.h
@@ -756,6 +758,13 @@ cfg = cast(
     c_void_p(int(S.obs_frontend_get_profile_config())), POINTER(Config)
 )
 ```
+# Set current stream key
+```python 
+service = S.obs_frontend_get_streaming_service()
+settings = S.obs_service_get_settings(service)
+S.obs_data_set_string(settings, "key", _G._my_key)
+```
+- [Full source](src/stream_key.py)
 
 Note,that this uses `obspython.obs_frontend_get_profile_config` so there is no need to load additional libraries.
 

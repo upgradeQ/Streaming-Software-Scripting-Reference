@@ -13,8 +13,8 @@ def scene_ar(scene):
 
 
 @contextmanager
-def scene_enum(items):
-    items = S.obs_scene_enum_items(items)
+def scene_enum(_scene):
+    items = S.obs_scene_enum_items(_scene)
     try:
         yield items
     finally:
