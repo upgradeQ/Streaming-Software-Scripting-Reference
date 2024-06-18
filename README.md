@@ -1,18 +1,14 @@
-# OBS Studio Python Scripting Cheatsheet
 Getting started:
 - [Python](https://www.python.org/about/gettingstarted/)
 - [OBS Studio Scripting](https://github.com/obsproject/obs-studio/wiki/Getting-Started-With-OBS-Scripting)
 
-Consider cloning this repo and running examples(they are self contained) in OBS Studio,
-most of them will operate on *existing* text soure. Tip: you can create a copy of script,
-rename it, and add to OBS. So two of identical scripts will be run in parallel with separated namespaces. 
-Also check out [issues](https://github.com/upgradeQ/OBS-Studio-Python-Scripting-Cheatsheet-obspython-Examples-of-API/issues)  if you found any error or have a suggestion and 
-[discussions](https://github.com/upgradeQ/OBS-Studio-Python-Scripting-Cheatsheet-obspython-Examples-of-API/discussions) for collaboration,ideas and Q&A.
-
+Consider cloning this repo and running examples, they are self contained.
+Tip: you can create a copy of script, rename it, and add to OBS. So two of identical scripts will be run in parallel with separate namespaces. 
+Also check out [issues](https://github.com/upgradeQ/OBS-Studio-Python-Scripting-Cheatsheet-obspython-Examples-of-API/issues)  to report error or have a suggestion and [discussions](https://github.com/upgradeQ/OBS-Studio-Python-Scripting-Cheatsheet-obspython-Examples-of-API/discussions) 
 # Table of content 
 - [UI](#ui)
 - [Property modification](#property-modification)
-- [Additional input](#additional-input)
+- [Property additional input](#property-additional-input)
 - [obs_data](#obs_data)
 - [Print all source settings and filter names](#print-all-source-settings-and-filter-names)
 - [Save settings as json](#save-settings-as-json)
@@ -28,7 +24,7 @@ Also check out [issues](https://github.com/upgradeQ/OBS-Studio-Python-Scripting-
 - [Events](#events)
 - [Program state](#program-state)
 - [Signals](#signals)
-- [Timing (sequential primitives) ](#timing-sequential-primitives)
+- [Timers and threads](#timers-and-threads)
 - [Hotkeys](#hotkeys)
 - [Play sound](#play-sound)
 - [Read and write private data from scripts or plugins](#read-and-write-private-data-from-scripts-or-plugins)
@@ -38,6 +34,7 @@ Also check out [issues](https://github.com/upgradeQ/OBS-Studio-Python-Scripting-
 - [Get current profile settings via ffi](#get-current-profile-settings-via-ffi)
 - [Convert from SWIG type to ctype](#convert-from-swig-type-to-ctype)
 - [Set current stream key](#set-current-stream-key)
+- [Raw frames](#raw-frames)
 - [Debug](#debug)
 - [Security](#security)
 - [Docs and code examples](#docs-and-code-examples)
@@ -82,7 +79,7 @@ def script_properties():
 See also :  
 https://obsproject.com/docs/reference-properties.html#property-modification-functions
 
-## Additional input 
+## Property additional input 
 ```python
 def callback(props, prop, settings):
     _number = S.obs_data_get_int(settings, "_int")
@@ -469,7 +466,7 @@ def callback(calldata):
 
 https://obsproject.com/docs/reference-outputs.html#output-signals
 
-# Timing (sequential primitives)
+# Timers and threads
 
 ```python
 def script_update(settings):
@@ -577,12 +574,12 @@ def send_hotkey(obs_htk_id, key_modifiers=None):
 ```
 
 - [Full source](src/obs_httkeys.py) 
-- [Example with global ](src/hotkey_exmpl.py)
-- [Full example with json](src/hotkey_json.py)  
-- [Full example with send hotkey](src/send_hotkey.py)
-- [Example with many hotkeys](src/hotkey_many.py)
+- [Example with json](src/hotkey_json.py)
+- [Example with send hotkey](src/send_hotkey.py)
+- [Example with global ](src/hotkey_exmpl.py) - The use of `global` is not recommended as it reduces readability.
+- [Example with many hotkeys](src/hotkey_many.py) - Implementation of keyboard, easily add many hotkeys to the program.
 
-See also:  
+See also:
 https://github.com/obsproject/obs-studio/blob/master/libobs/obs-hotkeys.h
 https://github.com/Palakis/obs-websocket/pull/595
 
@@ -758,25 +755,33 @@ cfg = cast(
     c_void_p(int(S.obs_frontend_get_profile_config())), POINTER(Config)
 )
 ```
+
+Note,that this uses `obspython.obs_frontend_get_profile_config` so there is no need to load additional libraries and write glue ctypes code.
+
 # Set current stream key
 ```python 
 service = S.obs_frontend_get_streaming_service()
 settings = S.obs_service_get_settings(service)
 S.obs_data_set_string(settings, "key", _G._my_key)
+S.obs_service_update(service, settings)
+S.obs_data_release(settings)
+S.obs_frontend_save_streaming_service()
 ```
 - [Full source](src/stream_key.py)
 
-Note,that this uses `obspython.obs_frontend_get_profile_config` so there is no need to load additional libraries.
-
-- See also: [Get video frames programmatically](src/get_source_frame_data_ffi.py)
-
+# Raw frames
+It is possible to grab raw frame from source see: [Get video frames programmatically](src/get_source_frame_data_ffi.py) - this is a viable option if you want check frame data in memory, with no plugins or recompilation.
+Other methods:
+- [`obs-screenshot-plugin`](https://github.com/synap5e/obs-screenshot-plugin/issues/47) Fork + Windows only, it has `Output to Named Shared Memory Output` among other things.
+- [`obs-virtualcam`](https://obsproject.com/forum/resources/obs-virtualcam.1744/) Plugin, read webcam frames, [related](https://github.com/obsproject/obs-studio/issues/3635)
+- [`obs-rs`](https://github.com/not-matthias/obs-rs) - Uses the decoupled hook implementation of OBS Studio, written in Rust, uses Windows API, possible to port to Python ctypes.
+- [`DXcam`](https://github.com/ra1nty/DXcam/issues/100) - Current maintained standalone DirectX high performance screen capture written in Python ctypes. 
 
 # Debug
 There is no stdin therefore you can't use pdb , options are:
-- using `print`
-- using generated log file (contains information about memory leaks)
+- :star: using `print`
+- using generated log file (contains information about memory leaks), also accessible via Help>Log Files>View Current Log
 - using pycharm remote debugging (localhost)
-- using threading 
 - using [vscode](https://code.visualstudio.com/docs/python/debugging) attach to the process:
     - Load python extension
     - open script file , `pip install debugpy` , place  `debugpy.breakpoint()` somewhere
@@ -796,37 +801,36 @@ There is no stdin therefore you can't use pdb , options are:
 - Avoid using `sudo` or admin, check hashsums, do backups, do updates, setup a firewall, do hardening, etc...
 - There is no confirmation for loading Lua or Python scripts - they can be added/overwritten via .json key
 - Also solutions for Python source code obfuscation & loading from shared (compiled) library do exist. Applying that will make it a bit harder to reverse-engineer your private code.
-- Legal info [link](https://uspto.report/company/Wizards-Of-Obs-L-L-C)
+- Legal info (trademark) [link](https://www.trademarkelite.com/trademark/trademark-owner/Wizards%20of%20OBS%20LLC)
 - Privacy policy - https://obsproject.com/privacy-policy  - keyword *downlodable software*
 
 # Docs and code examples
 
 - [`Generated export.md`](src/export.md)
 
-contains all variables and functions available in `obspython` formatted with markdown. Table consist of links to appropriate search terms in OBS Studio repository, links to scripts in `obspython` and `obslua` with each script within GitHub code search.`gs_*` and `matrix_*` functions exluded from that table.
+Contains all variables and functions available in `obspython` formatted with markdown. Table consist of links to appropriate search terms in OBS Studio repository, links to scripts in `obspython` and `obslua` with each script within GitHub code search.`gs_*` and `matrix_*` functions exluded from that table.
 [Export names](src/export_md.py)  
 
 - [`Generated export including graphics index.csv`](src/export_all.csv) - All variable and function exports.
 - [`Generated export libobs for ctypes index.csv`](src/dumps_libobs.csv) - Created using `dumpbin` tool with this command `.\dumpbin /exports "C:\Program Files\obs-studio\bin\64bit\obs.dll"` 
 
-
 # Changes between versions
-* Since OBS Studio 28.0 Beta 1 it is possible to use most python3 versions on hardware which supports Qt 6.
-* Qt 6 has dropped support for Windows 7 & 8, macOS 10.13 & 10.14, Ubuntu 18.04 and all 32-bit operating systems. As such, OBS will no longer be supported on these platforms.
-* Added native support for websocket 
+* 28.0.0 version - Most Python 3 versions will work now, so there is no restriction to 3.6.8
+* 28.0.0 version - NO support for Windows 7 & 8, macOS 10.13 & 10.14, Ubuntu 18.04 and all 32-bit operating systems
+* 28.0.0 version - Added native support for websocket 
 * 30.0.0 version - Python 3.11 support for Windows and mac OS
 * 30.0.0 version - Lua binary libraries loading
-* 30.0.0 version - New source signals & procedures - hooked,unhooked; procedure - get_hooked
-
+* 30.1.0 version - Premultiplied Alpha option for game capture on Windows
 
 # Links
 - [Scripts forum](https://obsproject.com/forum/resources/categories/scripts.5/) , [Github topic `obs-scripts`](https://github.com/topics/obs-scripts) , [Github topic `obs-script`](https://github.com/topics/obs-script)
+- [Awesome OBS Studio collection](https://github.com/rse/obs-setup)
 - [OBS Studio Repo](https://github.com/obsproject/obs-studio) , [obs-scripting-python.c](https://github.com/obsproject/obs-studio/blob/master/deps/obs-scripting/obs-scripting-python.c)
 - [Docs](https://obsproject.com/docs/) , [Docs/scripting](https://obsproject.com/docs/scripting.html) , [Docs/plugins](https://obsproject.com/docs/plugins.html) , [Docs index](https://obsproject.com/docs/genindex.html)
 - obspython [Gist](https://gist.github.com/search?l=Python&q=obspython&s=updated) , [Github](https://github.com/search?l=Python&o=desc&q=obspython&s=indexed&type=Code) , [grep.app](https://grep.app/search?q=obspython&filter[lang][0]=Python)
 - obslua [Gist](https://gist.github.com/search?l=Lua&o=desc&q=obslua&s=updated) , [Github](https://github.com/search?l=Lua&o=desc&q=obslua&s=indexed&type=Code) , [grep.app](https://grep.app/search?q=obslua&filter[lang][0]=Lua)
 - [A Python bundle for integration with OBS scripting](https://github.com/zooba/obs-python)
 - [Lua tips and tricks](https://obsproject.com/forum/threads/tips-and-tricks-for-lua-scripts.132256/)
-- [Python 3.6.8 , 64 bit installer, for Microsoft Windows](https://www.python.org/downloads/release/python-368/)
+- [Python 3.11.9, 64-bit installer, for Microsoft Windows](https://www.python.org/downloads/release/python-3119/)
 # Contribute
-Contributions are welcome!
+Something missing? Write a PR!
