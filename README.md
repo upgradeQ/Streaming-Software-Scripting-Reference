@@ -772,8 +772,9 @@ S.obs_frontend_save_streaming_service()
 # Raw frames
 It is possible to grab raw frame from source see: [Get video frames programmatically](src/get_source_frame_data_ffi.py) - this is a viable option if you want check frame data in memory, with no plugins or recompilation.
 Other methods:
-- [`obs-screenshot-plugin`](https://github.com/synap5e/obs-screenshot-plugin/issues/47) Fork + Windows only, it has `Output to Named Shared Memory Output` among other things.
-- [`obs-virtualcam`](https://obsproject.com/forum/resources/obs-virtualcam.1744/) Plugin, read webcam frames, [related](https://github.com/obsproject/obs-studio/issues/3635)
+- [`obs-screenshot-plugin`](https://github.com/synap5e/obs-screenshot-plugin/issues/47) - Fork + Windows only, it has `Output to Named Shared Memory Output` among other things.
+- [`obs-python`](https://github.com/zooba/obs-python) - Cython obs plugin with raw frames support
+- [`obs-virtualcam`](https://obsproject.com/forum/resources/obs-virtualcam.1744/) - Plugin, read webcam frames, [related](https://github.com/obsproject/obs-studio/issues/3635)
 - [`obs-rs`](https://github.com/not-matthias/obs-rs) - Uses the decoupled hook implementation of OBS Studio, written in Rust, uses Windows API, possible to port to Python ctypes.
 - [`DXcam`](https://github.com/ra1nty/DXcam/issues/100) - Current maintained standalone DirectX high performance screen capture written in Python ctypes. 
 
@@ -819,17 +820,16 @@ Contains all variables and functions available in `obspython` formatted with mar
 * 28.0.0 version - NO support for Windows 7 & 8, macOS 10.13 & 10.14, Ubuntu 18.04 and all 32-bit operating systems
 * 28.0.0 version - Added native support for websocket 
 * 30.0.0 version - Python 3.11 support for Windows and mac OS
-* 30.0.0 version - Lua binary libraries loading
+* 30.0.0 version - Lua binary libraries loading fix
 * 30.1.0 version - Premultiplied Alpha option for game capture on Windows
 
 # Links
-- [Scripts forum](https://obsproject.com/forum/resources/categories/scripts.5/) , [Github topic `obs-scripts`](https://github.com/topics/obs-scripts) , [Github topic `obs-script`](https://github.com/topics/obs-script)
+- [Scripts forum](https://obsproject.com/forum/resources/categories/scripts.5/) , [Github topic `obs-scripts`](https://github.com/topics/obs-scripts) , [Github topic `obs-script`](https://github.com/topics/obs-script) , [Github login `obslua`](https://github.com/search?o=desc&q=obslua+path%3A*.lua&s=indexed&type=code) , [Github login `obspython`](https://github.com/search?o=desc&q=obspython+path%3A*.py&s=indexed&type=code) , [Github keyword `obs` 2024](https://github.com/search?q=%2F%5Bobs%5D%2F+created%3A%3E2024-01-01&type=repositories&s=updated&o=desc)
 - [Awesome OBS Studio collection](https://github.com/rse/obs-setup)
 - [OBS Studio Repo](https://github.com/obsproject/obs-studio) , [obs-scripting-python.c](https://github.com/obsproject/obs-studio/blob/master/deps/obs-scripting/obs-scripting-python.c)
 - [Docs](https://obsproject.com/docs/) , [Docs/scripting](https://obsproject.com/docs/scripting.html) , [Docs/plugins](https://obsproject.com/docs/plugins.html) , [Docs index](https://obsproject.com/docs/genindex.html)
 - obspython [Gist](https://gist.github.com/search?l=Python&q=obspython&s=updated) , [Github](https://github.com/search?l=Python&o=desc&q=obspython&s=indexed&type=Code) , [grep.app](https://grep.app/search?q=obspython&filter[lang][0]=Python)
 - obslua [Gist](https://gist.github.com/search?l=Lua&o=desc&q=obslua&s=updated) , [Github](https://github.com/search?l=Lua&o=desc&q=obslua&s=indexed&type=Code) , [grep.app](https://grep.app/search?q=obslua&filter[lang][0]=Lua)
-- [A Python bundle for integration with OBS scripting](https://github.com/zooba/obs-python)
 - [Lua tips and tricks](https://obsproject.com/forum/threads/tips-and-tricks-for-lua-scripts.132256/)
 - [Python 3.11.9, 64-bit installer, for Microsoft Windows](https://www.python.org/downloads/release/python-3119/)
 # Contribute
